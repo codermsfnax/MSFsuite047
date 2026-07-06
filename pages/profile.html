@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Профиль — MSF-043</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../assets/images/msf.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* === PROFILE STYLES === */
+    @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+    .anim-1 { animation: fadeSlideDown 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+    .anim-2 { animation: fadeSlideUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) 0.08s both; }
+    .anim-3 { animation: fadeSlideUp 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) 0.16s both; }
+    .anim-4 { animation: scaleIn 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.22s both; }
+    .anim-5 { animation: fadeSlideUp 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.28s both; }
+    .anim-6 { animation: fadeSlideUp 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.34s both; }
+    .anim-7 { animation: fadeSlideUp 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.4s both; }
+    .anim-8 { animation: fadeSlideUp 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.46s both; }
+
+    .profile-banner { width: 100%; height: 260px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px 16px 0 0; object-fit: cover; }
+    .profile-banner-placeholder { width: 100%; height: 260px; background: linear-gradient(135deg, var(--accent-dim) 0%, var(--bg-card) 50%, rgba(155,89,182,0.1) 100%); border: 1px solid var(--border); border-radius: 16px 16px 0 0; }
+    .profile-card { background: var(--bg-elevated); border: 1px solid var(--border); border-top: none; border-radius: 0 0 16px 16px; padding: 2.8rem; display: flex; gap: 2.8rem; align-items: flex-start; flex-wrap: wrap; }
+    .profile-avatar { width: 150px; height: 150px; border-radius: 50%; border: 5px solid var(--bg-elevated); box-shadow: 0 0 40px var(--accent-glow), 0 0 0 4px var(--accent); object-fit: cover; background: var(--bg-card); flex-shrink: 0; margin-top: -75px; transition: all 0.4s ease; }
+    .profile-avatar:hover { transform: scale(1.04); box-shadow: 0 0 60px var(--accent-glow), 0 0 0 4px var(--accent); }
+    .profile-avatar-placeholder { width: 150px; height: 150px; border-radius: 50%; border: 5px solid var(--bg-elevated); box-shadow: 0 0 40px var(--accent-glow), 0 0 0 4px var(--accent); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 3rem; color: var(--accent); flex-shrink: 0; background: var(--bg-card); margin-top: -75px; }
+    .profile-info { flex: 1; min-width: 300px; }
+    .profile-name { font-family: var(--font-display); font-size: 2.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.15rem; line-height: 1; }
+    .profile-msf-code { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-tertiary); letter-spacing: 0.12em; margin-bottom: 0.6rem; }
+    .profile-bio { font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1.2rem; font-family: var(--font-mono); font-weight: 300; white-space: pre-wrap; word-break: break-word; line-height: 1.6; padding: 0.9rem; background: var(--bg); border-radius: 10px; border: 1px solid var(--border-light); }
+    .profile-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.9rem; margin: 1.4rem 0; }
+    .stat-card { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem; text-align: center; transition: all 0.35s cubic-bezier(0.22, 0.61, 0.36, 1); cursor: default; }
+    .stat-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.3), 0 0 25px var(--accent-glow); }
+    .stat-value { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--accent); line-height: 1; }
+    .stat-label { font-family: var(--font-mono); font-size: 0.55rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.35rem; }
+    .profile-section-title { font-family: var(--font-display); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); margin: 1.8rem 0 0.7rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 0.5rem; }
+    .profile-section-title::before { content: ''; display: block; width: 4px; height: 16px; background: var(--accent); border-radius: 2px; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.7rem; }
+    .info-item { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.8rem; background: var(--bg); border-radius: 8px; font-size: 0.66rem; font-family: var(--font-mono); border: 1px solid var(--border-light); }
+    .info-label { color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.55rem; }
+    .info-value { color: var(--text); font-weight: 500; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .badge-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+    .badge-corps { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.35rem 0.8rem; border-radius: 8px; font-weight: 600; }
+    .badge-ssc { background: rgba(107,174,214,0.12); color: #6baed6; border: 1px solid rgba(107,174,214,0.4); }
+    .badge-rsc { background: rgba(232,160,200,0.12); color: #e8a0c8; border: 1px solid rgba(232,160,200,0.4); }
+    .badge-msc { background: rgba(76,175,132,0.12); color: #4caf84; border: 1px solid rgba(76,175,132,0.4); }
+    .badge-tsc { background: rgba(212,168,68,0.12); color: #d4a844; border: 1px solid rgba(212,168,68,0.4); }
+    .badge-ers { background: rgba(155,89,182,0.12); color: #9B59B6; border: 1px solid rgba(155,89,182,0.4); }
+    .badge-unit { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.35rem 0.8rem; border-radius: 8px; font-weight: 600; }
+    .badge-commander { background: rgba(204,85,85,0.15); color: #cc5555; border: 1px solid rgba(204,85,85,0.5); }
+    .badge-deputy { background: rgba(212,168,68,0.12); color: #d4a844; border: 1px solid rgba(212,168,68,0.4); }
+    .badge-junior { background: rgba(76,175,132,0.12); color: #4caf84; border: 1px solid rgba(76,175,132,0.4); }
+    .badge-member { background: rgba(155,89,182,0.08); color: #9B59B6; border: 1px solid rgba(155,89,182,0.3); }
+    .badge-trainee { background: rgba(136,136,160,0.08); color: #8888a0; border: 1px solid rgba(136,136,160,0.3); }
+    .badge-custom { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.07em; padding: 0.35rem 0.8rem; border-radius: 8px; font-weight: 600; }
+    .history-list { margin-top: 0.5rem; }
+    .history-item { display: flex; justify-content: space-between; align-items: center; padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border-light); font-size: 0.66rem; font-family: var(--font-mono); border-radius: 6px; margin-bottom: 2px; }
+    .history-plus { color: #4caf84; font-weight: 600; } .history-minus { color: #cc5555; font-weight: 600; }
+    .history-date { color: var(--text-tertiary); font-size: 0.52rem; }
+    .history-reason { color: var(--text-secondary); flex: 1; margin: 0 1rem; }
+    .loading-spinner { text-align: center; padding: 4rem; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-tertiary); }
+    .loading-spinner::before { content: ''; display: block; width: 36px; height: 36px; margin: 0 auto 1.2rem; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.7rem 1.4rem; font-family: var(--font-mono); font-size: 0.6rem; z-index: 99999; opacity: 0; transition: opacity 0.3s ease; border-radius: 8px; pointer-events: none; }
+    .toast.show { opacity: 1; } .toast-success { border-color: #4caf84; color: #4caf84; } .toast-error { border-color: #cc5555; color: #cc5555; }
+    .profile-admin-btn { margin-top: 0.7rem; width: 100%; text-align: center; justify-content: center; font-size: 0.58rem; display: none; padding: 0.55rem; border-radius: 8px; font-family: var(--font-display); letter-spacing: 0.08em; }
+    .profile-admin-btn:hover { color: #fff !important; background: var(--accent); }
+    .comments-section { margin-top: 2rem; }
+    .comment-form { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .comment-input { flex: 1; padding: 0.55rem 0.7rem; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: var(--font-mono); font-size: 0.6rem; outline: none; }
+    .comment-input:focus { border-color: var(--accent); }
+    .comment-btn { padding: 0.55rem 1.1rem; background: var(--accent); color: #fff; border: none; border-radius: 10px; font-family: var(--font-display); font-size: 0.55rem; cursor: pointer; text-transform: uppercase; }
+    .comment-btn:hover { background: var(--accent-dim); }
+    .comment-item { padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--border-light); font-size: 0.62rem; font-family: var(--font-mono); }
+    .comment-item.pinned { border-left: 3px solid var(--accent); background: rgba(var(--accent-rgb), 0.04); }
+    .comment-pin-badge { font-size: 0.45rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-right: 0.5rem; font-weight: 600; }
+    .comment-author { color: var(--accent); font-weight: 600; }
+    .comment-text { color: var(--text-secondary); margin-top: 0.2rem; white-space: pre-wrap; word-break: break-word; }
+    .comment-time { color: var(--text-tertiary); font-size: 0.45rem; margin-top: 0.1rem; }
+    .comment-actions { display: flex; gap: 0.4rem; margin-top: 0.3rem; }
+    .comment-action-btn { color: var(--text-tertiary); cursor: pointer; font-size: 0.5rem; background: none; border: none; padding: 0; font-family: var(--font-mono); }
+    .comment-action-btn:hover { color: var(--accent); } .comment-action-btn.danger:hover { color: #cc5555; }
+    .comment-edit-input { width: 100%; padding: 0.35rem 0.45rem; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: var(--font-mono); font-size: 0.55rem; outline: none; margin-top: 0.2rem; }
+
+    /* === SETTINGS REDESIGN === */
+    @keyframes settingsModalIn {
+      from { opacity: 0; transform: scale(0.92) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .settings-btn { background: none; border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer; padding: 0.45rem 0.65rem; border-radius: 10px; transition: all 0.25s ease; display: flex; align-items: center; }
+    .settings-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(155,89,182,0.05); }
+    .settings-btn svg { width: 22px; height: 22px; }
+    .settings-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      z-index: 9999; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.35s ease;
+    }
+    .settings-overlay.active { opacity: 1; pointer-events: auto; }
+    .settings-modal {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      width: 580px; max-width: 94vw; max-height: 85vh;
+      overflow-y: auto;
+      animation: settingsModalIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(155,89,182,0.1);
+      display: flex; flex-direction: column;
+    }
+    .settings-modal::-webkit-scrollbar { width: 4px; }
+    .settings-modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    .settings-header {
+      padding: 1.8rem 2rem 1.2rem;
+      border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .settings-header h3 {
+      font-family: var(--font-display); font-size: 1rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--text); margin: 0;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .settings-header h3::before {
+      content: ''; display: block; width: 5px; height: 20px;
+      background: var(--accent); border-radius: 3px;
+    }
+    .settings-close {
+      background: none; border: 1px solid var(--border); color: var(--text-tertiary);
+      cursor: pointer; width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; transition: all 0.2s ease;
+    }
+    .settings-close:hover { border-color: var(--accent); color: var(--accent); }
+    .settings-body { padding: 1.8rem 2rem; display: flex; flex-direction: column; gap: 2rem; }
+    .settings-group-title {
+      font-family: var(--font-mono); font-size: 0.55rem; text-transform: uppercase;
+      letter-spacing: 0.15em; color: var(--text-tertiary);
+      margin-bottom: 0.8rem; font-weight: 500;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .settings-group-title::after {
+      content: ''; flex: 1; height: 1px; background: var(--border-light);
+    }
+    .settings-field { margin-bottom: 0.8rem; }
+    .settings-field label {
+      display: block; font-family: var(--font-mono); font-size: 0.52rem;
+      color: var(--text-tertiary); margin-bottom: 0.3rem;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .settings-field input[type="text"],
+    .settings-field input[type="password"] {
+      width: 100%; padding: 0.6rem 0.7rem; background: var(--bg);
+      border: 1px solid var(--border); border-radius: 10px;
+      color: var(--text); font-family: var(--font-mono); font-size: 0.62rem;
+      outline: none; transition: all 0.2s ease;
+    }
+    .settings-field input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(155,89,182,0.08); }
+    .settings-file-upload {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding: 0.7rem 0.9rem; background: var(--bg);
+      border: 1px dashed var(--border); border-radius: 10px;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    .settings-file-upload:hover { border-color: var(--accent); background: rgba(155,89,182,0.03); }
+    .settings-file-upload input[type="file"] { display: none; }
+    .settings-file-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: rgba(155,89,182,0.1); display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .settings-file-icon svg { width: 16px; height: 16px; stroke: var(--accent); }
+    .settings-file-text { font-family: var(--font-mono); font-size: 0.55rem; color: var(--text-tertiary); }
+    .settings-btn-row { display: flex; gap: 0.6rem; margin-top: 0.3rem; }
+    .settings-btn-primary {
+      flex: 1; padding: 0.65rem; background: var(--accent); color: #fff;
+      border: none; border-radius: 10px; font-family: var(--font-display);
+      font-size: 0.62rem; cursor: pointer; text-transform: uppercase;
+      letter-spacing: 0.08em; transition: all 0.25s ease;
+    }
+    .settings-btn-primary:hover { background: var(--accent-dim); box-shadow: 0 0 25px var(--accent-glow); }
+    .settings-btn-secondary {
+      flex: 1; padding: 0.65rem; background: transparent; color: var(--text-tertiary);
+      border: 1px solid var(--border); border-radius: 10px;
+      font-family: var(--font-display); font-size: 0.62rem; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.25s ease;
+    }
+    .settings-btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .settings-footer {
+      padding: 1.2rem 2rem; border-top: 1px solid var(--border-light);
+      display: flex; justify-content: center;
+    }
+    .settings-btn-danger {
+      padding: 0.65rem 2rem; background: transparent; color: #cc5555;
+      border: 1px solid rgba(204,85,85,0.3); border-radius: 10px;
+      font-family: var(--font-display); font-size: 0.62rem; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 0.08em; transition: all 0.25s ease;
+    }
+    .settings-btn-danger:hover { background: #cc5555; color: #fff; border-color: #cc5555; }
+    .logout-confirm { text-align: center; padding: 2rem; }
+    .logout-confirm h3 { font-family: var(--font-display); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.8rem; color: var(--text); }
+    .logout-confirm p { font-family: var(--font-mono); font-size: 0.62rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+    .comment-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent);
+      vertical-align: middle;
+      margin-right: 0.4rem;
+      flex-shrink: 0;
+    }
+    .comment-avatar-placeholder {
+      display: inline-flex;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      color: var(--text-tertiary);
+      margin-right: 0.4rem;
+      flex-shrink: 0;
+    }
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo">MSF-043</a>
+    <nav><ul class="header-nav">
+      <li><a href="../index.html">Главная</a></li><li><a href="reglament.html">Регламент</a></li><li><a href="karbogreyd.html">Карбогрейд</a></li><li><a href="struktura.html">Структура</a></li><li><a href="korpusa.html">Корпуса</a></li>
+    </ul></nav>
+    <button class="settings-btn" id="settingsBtn" title="Настройки">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="settings-overlay" id="settingsOverlay"><div class="settings-modal" id="settingsContent"></div></div>
+
+<div class="main-container">
+  <main class="content" style="max-width:100%;" id="profileContent"><div class="loading-spinner">Загрузка профиля...</div></main>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, setDoc, deleteDoc, query, where } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+let db, auth, currentUser, profileUid, profileData;
+
+(async () => {
+  const res = await fetch('../keys.json'); const keys = await res.json();
+  const app = initializeApp(keys.firebase); auth = getAuth(app); db = getFirestore(app);
+  const params = new URLSearchParams(window.location.search); const viewUid = params.get('id');
+  const container = document.getElementById('profileContent');
+  onAuthStateChanged(auth, async (user) => {
+    if (!user && !viewUid) { window.location.href = '../index.html'; return; }
+    currentUser = user; profileUid = viewUid || user.uid;
+    const isOwn = !viewUid || (user && user.uid === viewUid);
+    try {
+      const snap = await getDoc(doc(db, 'users', profileUid));
+      if (!snap.exists()) { container.innerHTML = '<p>Пользователь не найден</p>'; return; }
+      profileData = snap.data();
+      renderProfile(container, profileData, isOwn);
+      loadComments();
+      if (isOwn) setupSettings();
+    } catch (e) { container.innerHTML = '<p>Ошибка: ' + e.message + '</p>'; }
+  });
+})();
+
+function compressImage(file, maxWidth = 400) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); let w = img.width, h = img.height; if (w > maxWidth) { h = (h * maxWidth) / w; w = maxWidth; } c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h); resolve(c.toDataURL('image/jpeg', 0.75)); }; img.src = e.target.result; };
+    reader.readAsDataURL(file);
+  });
+}
+
+function getAccessLevel(kg) {
+  if (kg >= 220) return { label: 'Α-ALPHA', cls: 'badge-commander' };
+  if (kg >= 150) return { label: 'Β-BETA', cls: 'badge-deputy' };
+  if (kg >= 90) return { label: 'Γ-GAMMA', cls: 'badge-junior' };
+  if (kg >= 15) return { label: 'Δ-DELTA', cls: 'badge-member' };
+  return { label: 'Δ-DELTA', cls: 'badge-trainee' };
+}
+
+function getUnitInfo(ur) {
+  if (!ur || !Object.keys(ur).length) return { unit: 'MSF', role: 'Оперативник', cls: 'badge-member' };
+  
+  // Проверяем, есть ли od (Оперативный директор) — показываем его в первую очередь
+  if (ur.od) {
+    return { unit: 'ОД', role: 'Оперативный директор', cls: 'badge-commander' };
+  }
+  
+  // Берём последнее добавленное подразделение (самое приоритетное — то, что выдано последним)
+  const entries = Object.entries(ur);
+  const [u, r] = entries[entries.length - 1];
+  
+  const lb = { 
+    commander: 'Командир', 
+    deputy: 'Зам. командира', 
+    junior: 'Мл. командир', 
+    member: 'Штатный', 
+    trainee: 'Учебный',
+    director: 'Оперативный директор'
+  };
+  const cl = { 
+    commander: 'badge-commander', 
+    deputy: 'badge-deputy', 
+    junior: 'badge-junior', 
+    member: 'badge-member', 
+    trainee: 'badge-trainee',
+    director: 'badge-commander'
+  };
+  
+  const unitNames = { usf: 'USF', dms: 'DMS', fd: 'Feld Demons', od: 'ОД' };
+  return { 
+    unit: unitNames[u] || u.toUpperCase(), 
+    role: lb[r] || r, 
+    cls: cl[r] || 'badge-member' 
+  };
+}
+
+function renderProfile(container, data, isOwn) {
+  const kg = data.karbogreyd || 0; let kgt = 'Ky';
+  if (kg >= 220) kgt = 'K6'; else if (kg >= 150) kgt = 'K5'; else if (kg >= 90) kgt = 'K4'; else if (kg >= 45) kgt = 'K3'; else if (kg >= 15) kgt = 'K2'; else if (kg > 0) kgt = 'K1';
+  const ac = getAccessLevel(kg), ui = getUnitInfo(data.unitRoles);
+  const iu = data.unitRoles && Object.keys(data.unitRoles).length > 0;
+  const aco = (data.corpsRoles || []).map(r => `<span class="badge-corps badge-${r.role.split('-')[0].toLowerCase()}">${iu ? r.role.split('-')[0] : r.role}</span>`).join('') || '<span class="badge-corps badge-trainee">Нет</span>';
+  const cb = (data.customBadges || []).map(b => `<span class="badge-custom" style="background:${b.bg};color:${b.color};border:1px solid ${b.color};">${b.label}</span>`).join('');
+  const hh = (data.history || []).slice().reverse().map(h => `<div class="history-item"><span class="${h.type==='plus'?'history-plus':'history-minus'}">${h.type==='plus'?'+':'-'}${h.amount}</span><span class="history-reason">${h.reason}</span><span class="history-date">${new Date(h.date).toLocaleString('ru-RU')}</span></div>`).join('') || '<p style="color:var(--text-tertiary);text-align:center;padding:1rem;">Нет записей</p>';
+  const bh = data.banner ? `<img src="${data.banner}" class="profile-banner anim-1">` : `<div class="profile-banner-placeholder anim-1"></div>`;
+  const ah = data.avatar ? `<img src="${data.avatar}" class="profile-avatar anim-2">` : `<div class="profile-avatar-placeholder anim-2">?</div>`;
+  const rn = data.robloxNick || '', ia = data.email === 'netprav61@gmail.com', ic = data.unitRoles && Object.values(data.unitRoles).includes('commander');
+
+  container.innerHTML = `<div class="content-header anim-1"><p class="content-label">Личный кабинет</p><h1 class="content-title">Профиль</h1></div><div>${bh}</div><div class="profile-card anim-3"><div>${ah}${isOwn&&ia?'<a href="admin.html" class="btn profile-admin-btn" style="display:flex;">АДМИН-ПАНЕЛЬ</a>':''}${isOwn&&ic?'<a href="admin.html" class="btn profile-admin-btn" style="display:flex;">УПРАВЛЕНИЕ ВЗВОДОМ</a>':''}</div><div class="profile-info"><div class="profile-name anim-4">${data.callsign||'Без позывного'}${rn?` <span style="color:var(--text-tertiary);font-size:0.65rem;font-weight:400;">| @${rn}</span>`:''}</div><div class="profile-msf-code anim-4">${data.msfCode||'MSF-D-код не выдан'}</div><div class="profile-bio anim-4">${data.bio||''}</div><div class="profile-stats anim-5"><div class="stat-card"><div class="stat-value">${kg}</div><div class="stat-label">Баллы</div></div><div class="stat-card"><div class="stat-value">${kgt}</div><div class="stat-label">Уровень</div></div></div><div class="profile-section-title anim-6">Информация</div><div class="info-grid anim-6"><div class="info-item"><span class="info-label">Должность</span><span class="info-value"><span class="badge-unit ${ui.cls}">${ui.unit} — ${ui.role}</span></span></div><div class="info-item"><span class="info-label">Корпус</span><span class="info-value">${aco}</span></div><div class="info-item"><span class="info-label">Доступ</span><span class="info-value"><span class="badge-unit ${ac.cls}">${ac.label}</span></span></div></div><div class="profile-section-title anim-7">Роли</div><div class="badge-group anim-7">${cb||'<span style="color:var(--text-tertiary);font-size:0.55rem;">Нет кастомных ролей</span>'}</div></div></div><div class="anim-8"><h2>История баллов</h2><div class="history-list">${hh}</div></div><div class="comments-section anim-8"><h2>Комментарии</h2>${currentUser?`<div class="comment-form"><input type="text" class="comment-input" id="commentInput" placeholder="Оставить комментарий..." maxlength="300"><button class="comment-btn" id="commentBtn">Отправить</button></div>`:'<p style="color:var(--text-tertiary);font-size:0.6rem;">Войдите</p>'}<div id="commentsList"></div></div>`;
+  if (currentUser) setupComments();
+}
+
+function setupSettings() {
+  const overlay = document.getElementById('settingsOverlay'), content = document.getElementById('settingsContent');
+  document.getElementById('settingsBtn').addEventListener('click', () => { showMain(); overlay.classList.add('active'); });
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('active'); });
+
+  function showMain() {
+    content.innerHTML = `
+      <div class="settings-header">
+        <h3>Настройки</h3>
+        <button class="settings-close" id="settingsClose">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-group">
+          <div class="settings-group-title">Конфиденциальность</div>
+          <div class="settings-field"><label>Позывной</label><input type="text" id="sCallsign" value="${profileData.callsign||''}" maxlength="10"></div>
+          <div class="settings-field"><label>Текущий пароль</label><input type="password" id="sCurPass" placeholder="Введите для подтверждения"></div>
+          <div class="settings-field"><label>Новый пароль</label><input type="password" id="sNewPass" placeholder="Оставьте пустым если не меняете"></div>
+          <div class="settings-btn-row"><button class="settings-btn-primary" id="savePriv">Сохранить</button></div>
+        </div>
+        <div class="settings-group">
+          <div class="settings-group-title">Профиль</div>
+          <div class="settings-field"><label>Ник в Roblox</label><input type="text" id="sRoblox" value="${profileData.robloxNick||''}" maxlength="20"></div>
+          <div class="settings-field"><label>Описание</label><input type="text" id="sBio" value="${profileData.bio||''}" maxlength="200"></div>
+          <div class="settings-field">
+            <label>Баннер</label>
+            <label class="settings-file-upload" for="sBanner">
+              <span class="settings-file-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
+              <span class="settings-file-text" id="sBannerLabel">Нажмите чтобы выбрать</span>
+            </label>
+            <input type="file" id="sBanner" accept="image/*" style="display:none;">
+          </div>
+          <div class="settings-field">
+            <label>Аватар</label>
+            <label class="settings-file-upload" for="sAvatar">
+              <span class="settings-file-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <span class="settings-file-text" id="sAvatarLabel">Нажмите чтобы выбрать</span>
+            </label>
+            <input type="file" id="sAvatar" accept="image/*" style="display:none;">
+          </div>
+          <div class="settings-btn-row"><button class="settings-btn-primary" id="saveProf">Сохранить</button></div>
+        </div>
+      </div>
+      <div class="settings-footer"><button class="settings-btn-danger" id="logoutBtn">Выйти из аккаунта</button></div>`;
+
+    document.getElementById('settingsClose').addEventListener('click', () => overlay.classList.remove('active'));
+    document.getElementById('sBanner').addEventListener('change', () => { const f = document.getElementById('sBanner').files[0]; document.getElementById('sBannerLabel').textContent = f ? f.name : 'Нажмите чтобы выбрать'; });
+    document.getElementById('sAvatar').addEventListener('change', () => { const f = document.getElementById('sAvatar').files[0]; document.getElementById('sAvatarLabel').textContent = f ? f.name : 'Нажмите чтобы выбрать'; });
+
+    document.getElementById('savePriv').addEventListener('click', async () => {
+      const c = document.getElementById('sCallsign').value.trim(), p = document.getElementById('sCurPass').value, n = document.getElementById('sNewPass').value;
+      if (!p) { showToast('Введите текущий пароль','error'); return; }
+      try {
+        await reauthenticateWithCredential(currentUser, EmailAuthProvider.credential(currentUser.email, p));
+        if (c && c !== profileData.callsign) await updateDoc(doc(db,'users',currentUser.uid),{callsign:c});
+        if (n) await updatePassword(currentUser, n);
+        showToast('Сохранено','success'); overlay.classList.remove('active'); setTimeout(() => location.reload(), 500);
+      } catch (e) { showToast(e.code==='auth/invalid-credential'?'Неверный пароль':e.message,'error'); }
+    });
+
+    document.getElementById('saveProf').addEventListener('click', async () => {
+      const r = document.getElementById('sRoblox').value.trim(), b = document.getElementById('sBio').value.trim(),
+            bf = document.getElementById('sBanner').files[0], af = document.getElementById('sAvatar').files[0], u = {};
+      if (r !== (profileData.robloxNick||'')) u.robloxNick = r;
+      if (b !== (profileData.bio||'')) u.bio = b;
+      if (bf) u.banner = await compressImage(bf, 800);
+      if (af) u.avatar = await compressImage(af, 400);
+      if (Object.keys(u).length) await updateDoc(doc(db,'users',currentUser.uid), u);
+      showToast('Профиль обновлён','success'); overlay.classList.remove('active'); setTimeout(() => location.reload(), 500);
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      content.innerHTML = `<div class="settings-header"><h3>Выход</h3><button class="settings-close" id="settingsClose2">✕</button></div><div class="logout-confirm"><p>Вы уверены что хотите выйти из аккаунта?</p><div class="settings-btn-row"><button class="settings-btn-secondary" id="cancelLogout">Отмена</button><button class="settings-btn-danger" id="confirmLogout">Выйти</button></div></div>`;
+      document.getElementById('settingsClose2').addEventListener('click', () => overlay.classList.remove('active'));
+      document.getElementById('cancelLogout').addEventListener('click', () => showMain());
+      document.getElementById('confirmLogout').addEventListener('click', async () => { await signOut(auth); window.location.href = '../index.html'; });
+    });
+  }
+}
+
+function setupComments() {
+  document.getElementById('commentBtn').addEventListener('click', async () => {
+    const t = document.getElementById('commentInput').value.trim(); if (!t) return;
+    
+    const userSnap = await getDoc(doc(db, 'users', currentUser.uid));
+    const userData = userSnap.data();
+    
+    await setDoc(doc(collection(db, 'profileComments')), { 
+      profileUid, 
+      authorUid: currentUser.uid, 
+      authorName: userData?.callsign || currentUser.displayName || 'Аноним',
+      authorAvatar: userData?.avatar || null,
+      text: t, 
+      createdAt: new Date().toISOString(), 
+      pinned: false 
+    });
+    document.getElementById('commentInput').value = ''; 
+    loadComments();
+  });
+}
+
+async function loadComments() {
+  const list = document.getElementById('commentsList'); 
+  if (!list) return;
+  const q = query(collection(db,'profileComments'), where('profileUid','==',profileUid));
+  const s = await getDocs(q), a = []; 
+  s.forEach(d => a.push({ id: d.id, ...d.data() }));
+  a.sort((x, y) => (y.pinned ? 1 : 0) - (x.pinned ? 1 : 0) || new Date(y.createdAt) - new Date(x.createdAt));
+  
+  if (!a.length) { 
+    list.innerHTML = '<p style="color:var(--text-tertiary);text-align:center;padding:1rem;">Нет комментариев</p>'; 
+    return; 
+  }
+  
+  list.innerHTML = a.map(c => {
+    const d = new Date(c.createdAt).toLocaleString('ru-RU'), 
+        ia = currentUser?.uid === c.authorUid, 
+        io = currentUser?.uid === profileUid;
+    const avatarHtml = c.authorAvatar ? 
+      `<img src="${c.authorAvatar}" class="comment-avatar">` : 
+      `<span class="comment-avatar-placeholder">?</span>`;
+    
+    return `<div class="comment-item${c.pinned ? ' pinned' : ''}">${c.pinned?'<span class="comment-pin-badge">📌 Закреплено</span>':''}
+      <div class="comment-header">
+        ${avatarHtml}
+        <span class="comment-author">${c.authorName || 'Аноним'}</span>
+        <span style="color:var(--text-tertiary);font-size:0.45rem;">${d}</span>
+      </div>
+      <div class="comment-text">${c.text}</div>
+      <div class="comment-actions">
+        ${ia?`<button class="comment-action-btn edit-btn" data-id="${c.id}">✎ Ред.</button>`:''}
+        ${ia||io?`<button class="comment-action-btn danger delete-btn" data-id="${c.id}">✕ Удал.</button>`:''}
+        ${io?`<button class="comment-action-btn pin-btn" data-id="${c.id}">${c.pinned?'📌 Открепить':'📍 Закрепить'}</button>`:''}
+      </div>
+      <input type="text" class="comment-edit-input" id="ei_${c.id}" style="display:none;" maxlength="300">
+      <button class="comment-btn" id="se_${c.id}" style="display:none;margin-top:0.3rem;">Сохранить</button>
+    </div>`;
+  }).join('');
+  
+  list.querySelectorAll('.delete-btn').forEach(b => b.addEventListener('click', async () => { 
+    await deleteDoc(doc(db,'profileComments',b.dataset.id)); 
+    loadComments(); 
+  }));
+  
+  list.querySelectorAll('.edit-btn').forEach(b => b.addEventListener('click', () => { 
+    const id = b.dataset.id; 
+    document.getElementById('ei_'+id).style.display='block'; 
+    document.getElementById('ei_'+id).value = b.closest('.comment-item').querySelector('.comment-text').textContent; 
+    document.getElementById('se_'+id).style.display='inline-block'; 
+    b.style.display='none'; 
+  }));
+  
+  list.querySelectorAll('[id^="se_"]').forEach(b => b.addEventListener('click', async () => { 
+    const id = b.id.replace('se_',''); 
+    await updateDoc(doc(db,'profileComments',id),{text:document.getElementById('ei_'+id).value.trim()}); 
+    loadComments(); 
+  }));
+  
+  list.querySelectorAll('.pin-btn').forEach(b => b.addEventListener('click', async () => { 
+    const id = b.dataset.id, sn = await getDoc(doc(db,'profileComments',id)); 
+    await updateDoc(doc(db,'profileComments',id),{pinned:!sn.data().pinned}); 
+    loadComments(); 
+  }));
+}
+
+function showToast(msg, type) { const t = document.createElement('div'); t.className='toast toast-'+type; t.textContent=msg; document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show')); setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3000); }
+</script>
+</body>
+</html>

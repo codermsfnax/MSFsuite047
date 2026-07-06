@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSF-043 — Military Special Forces</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/images/msf.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div class="intro-overlay" id="introOverlay">
+  <div class="intro-wrap">
+    <div class="intro-title">MSF-043</div>
+    <div class="intro-bar"><div class="intro-bar-fill"></div></div>
+    <div class="intro-subtitle">MILITARY SPECIAL FORCES</div>
+  </div>
+</div>
+
+<canvas class="canvas-bg" id="bgParticles"></canvas>
+<div class="canvas-3d" id="canvas3d"></div>
+
+<div class="modal-overlay" id="discordModal">
+  <div class="modal-box">
+    <p class="modal-title">ПРИСОЕДИНИТЬСЯ К СЕРВЕРУ</p>
+    <ul class="modal-list">
+      <li><a href="https://discord.gg/dGPaKnT99C" target="_blank" rel="noopener">В состав MSF</a></li>
+      <li><a href="https://discord.gg/BgAeA2wBxH" target="_blank" rel="noopener">В состав VITYAZ</a></li>
+      <li><a href="https://discord.gg/7kESMmK9uy" target="_blank" rel="noopener">В состав PALLAS</a></li>
+      <li><a href="https://discord.gg/PxTGqB9ty8" target="_blank" rel="noopener">В состав USAF</a></li>
+      <li><a href="https://discord.gg/4vNhaF8rXC" target="_blank" rel="noopener">Аффилированные лица</a></li>
+    </ul>
+    <button class="modal-close" id="modalClose">Закрыть</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box auth-box">
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">ВХОД</button>
+      <button class="auth-tab" data-tab="register">РЕГИСТРАЦИЯ</button>
+    </div>
+    <form id="loginForm" class="auth-form active">
+      <div class="form-group"><label>EMAIL</label><input type="email" id="loginEmail" class="form-input" required></div>
+      <div class="form-group"><label>ПАРОЛЬ</label><input type="password" id="loginPassword" class="form-input" required></div>
+      <button type="submit" class="btn" style="width:100%;margin-top:0.5rem;"><span>ВОЙТИ</span></button>
+    </form>
+    <form id="regForm" class="auth-form">
+      <div class="form-group"><label>EMAIL</label><input type="email" id="regEmail" class="form-input" required></div>
+      <div class="form-group"><label>ПОЗЫВНОЙ</label><input type="text" id="regCallsign" class="form-input" maxlength="10" required></div>
+      <div class="form-group"><label>ПАРОЛЬ</label><input type="password" id="regPassword" class="form-input" required minlength="6"></div>
+      <button type="submit" class="btn" style="width:100%;margin-top:0.5rem;"><span>ЗАРЕГИСТРИРОВАТЬСЯ</span></button>
+    </form>
+    <button class="auth-close" id="authClose">Закрыть</button>
+  </div>
+</div>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-modal">
+    <input type="text" class="search-input" id="searchInput" placeholder="Поиск по сайту..." autocomplete="off">
+    <div class="search-results" id="searchResults"></div>
+    <button class="modal-close" id="searchClose">Закрыть</button>
+  </div>
+</div>
+
+<div class="notif-dropdown" id="notifDropdown"></div>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="header-logo">MSF-043</a>
+    <nav>
+      <ul class="header-nav">
+        <li><a href="index.html" class="active">Главная</a></li>
+        <li><a href="pages/reglament.html">Регламент</a></li>
+        <li><a href="pages/karbogreyd.html">Карбогрейд</a></li>
+        <li><a href="pages/struktura.html">Структура</a></li>
+        <li><a href="pages/korpusa.html">Корпуса</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <button class="search-btn" id="searchBtn" title="Поиск">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="notif-bell" id="notifBell" title="Уведомления">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+      </button>
+      <button class="btn" id="authBtn" style="padding:0.5rem 2.5rem;font-size:0.7rem;">Войти</button>
+    </div>
+  </div>
+</header>
+
+<div class="main-container">
+
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <p class="sidebar-title">Навигация</p>
+      <ul class="sidebar-list">
+        <li><a href="#about">О компании</a></li>
+        <li><a href="#docs">Документы</a></li>
+        <li><a href="#units">Подразделения</a></li>
+        <li><a href="#personnel">Состав</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-block">
+      <p class="sidebar-title">Документы</p>
+      <ul class="sidebar-list">
+        <li><a href="pages/karbogreyd.html">Карбогрейд</a></li>
+        <li><a href="pages/karboteriya.html">Карботерия</a></li>
+        <li><a href="pages/karboekniz.html">Карбоэкниз</a></li>
+        <li><a href="pages/gear-doc.html">Унификация экипировки</a></li>
+        <li><a href="pages/loadout-doc.html">Порядок оснащения</a></li>
+        <li><a href="pages/vehicles-doc.html">Применение техники</a></li>
+        <li><a href="pages/signals-doc.html">Сигналы и команды</a></li>
+        <li><a href="pages/usf.html">USF</a></li>
+        <li><a href="pages/dms.html">DMS</a></li>
+        <li><a href="pages/fd.html">Feld Demons</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-block">
+      <p class="sidebar-title">Подразделения</p>
+      <ul class="sidebar-list">
+        <li><a href="pages/usf.html">USF</a></li>
+        <li><a href="pages/dms.html">DMS</a></li>
+        <li><a href="pages/fd.html">Feld Demons</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-block">
+      <p class="sidebar-title">Учёт</p>
+      <ul class="sidebar-list">
+        <li><a href="pages/roster.html">Оперативный состав</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <div class="content-header reveal">
+      <p class="content-label">Частная военная компания</p>
+      <h1 class="content-title">Military Special Forces — 043</h1>
+    </div>
+
+    <div class="hero-actions reveal reveal-delay-1">
+      <button class="btn btn-discord" id="discordBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+        <span>Discord</span>
+      </button>
+      <a href="reports/index.html" class="btn btn-report">
+        <span>ЗАПОЛНИТЬ РАПОРТ</span>
+      </a>
+    </div>
+
+    <div class="infobox reveal reveal-delay-2">
+      <div class="infobox-title">ЧВК «MSF-043»</div>
+      <img src="assets/images/msf.png" alt="MSF-043" class="infobox-logo" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend','<p style=text-align:center;color:var(--text-tertiary);padding:1rem>[ Эмблема MSF-043 ]</p>')">
+      <div class="infobox-row"><span class="infobox-label">Тип</span><span class="infobox-value">Частная военная компания</span></div>
+      <div class="infobox-row"><span class="infobox-label">Платформа</span><span class="infobox-value">Roblox / BRM5</span></div>
+      <div class="infobox-row"><span class="infobox-label">Основана</span><span class="infobox-value">2026 г.</span></div>
+      <div class="infobox-row"><span class="infobox-label">Регламент</span><span class="infobox-value">01.07.2026</span></div>
+      <div class="infobox-row"><span class="infobox-label">Руководство</span><span class="infobox-value">Генеральный Директор</span></div>
+      <div class="infobox-row"><span class="infobox-label">Корпуса</span><span class="infobox-value">SSC · RSC · MSC · TSC · ERS</span></div>
+      <div class="infobox-row"><span class="infobox-label">Грейды</span><span class="infobox-value">Ky, K1–K6</span></div>
+    </div>
+
+    <h2 id="about" class="reveal">О компании</h2>
+    <p class="reveal">ЧВК «Military Special Forces — 043» (MSF-043) — частная военная компания, действующая в оперативной среде <strong>Roblox / Blackhawk Rescue Mission 5</strong>.</p>
+    <p class="reveal">Деятельность компании регулируется внутренними нормативными документами. Главный из них — <a href="pages/reglament.html">Регламент ЧВК «MSF-043»</a>.</p>
+    <p class="reveal">Компания придерживается принципов <strong>строгой дисциплины</strong>, <strong>иерархии</strong> и <strong>эффективности</strong>. Система рангов (<strong>Карбогрейд</strong>) включает учебный статус Ky и шесть основных боевых грейдов (K1–K6).</p>
+
+    <div class="toc reveal reveal-delay-3">
+      <p class="toc-title">Содержание</p>
+      <ol>
+        <li><a href="#about">О компании</a></li>
+        <li><a href="#docs">Документы ЧВК</a></li>
+        <li><a href="#units">Подразделения и взводы</a></li>
+        <li><a href="#personnel">Учёт оперативного состава</a></li>
+      </ol>
+    </div>
+
+    <h2 id="docs" class="reveal">Документы ЧВК</h2>
+    <p class="reveal" style="color:var(--accent);font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem;">Вся актуальная информация — только в документах ниже.</p>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Документ</th><th>Описание</th><th>Ссылка</th></tr></thead>
+        <tbody>
+          <tr><td>Положение о системе Карбогрейда</td><td>Система рангов и повышений личного состава</td><td><a href="pages/karbogreyd.html">Открыть</a></td></tr>
+          <tr><td>Положение о системе Карботерии</td><td>Система сигналов, команд и коммуникации</td><td><a href="pages/karboteriya.html">Открыть</a></td></tr>
+          <tr><td>Положение о системе Карбоэкниза</td><td>Система поощрения (Карбомарки)</td><td><a href="pages/karboekniz.html">Открыть</a></td></tr>
+          <tr><td>Положение о сигналах и командах</td><td>Протоколы связи в боевых условиях</td><td><a href="pages/signals-doc.html">Открыть</a></td></tr>
+          <tr><td>Положение об унификации экипировки</td><td>Стандарты внешнего вида и снаряжения</td><td><a href="pages/gear-doc.html">Открыть</a></td></tr>
+          <tr><td>Положение о порядке оснащения</td><td>Процедуры выдачи и учёта снаряжения</td><td><a href="pages/loadout-doc.html">Открыть</a></td></tr>
+          <tr><td>Положение о применении техники</td><td>Использование наземной и воздушной техники</td><td><a href="pages/vehicles-doc.html">Открыть</a></td></tr>
+          <tr><td>Положение о деятельности USF</td><td>Подразделение Universal Strike Force</td><td><a href="pages/usf.html">Открыть</a></td></tr>
+          <tr><td>Положение о деятельности DMS</td><td>Подразделение Double MilSec</td><td><a href="pages/dms.html">Открыть</a></td></tr>
+          <tr><td>Положение о деятельности Feld Demons</td><td>Взвод специального назначения</td><td><a href="pages/fd.html">Открыть</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="units" class="reveal">Подразделения и взводы</h2>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Подразделение</th><th>Тип</th><th>Страница</th></tr></thead>
+        <tbody>
+          <tr><td>Universal Strike Force</td><td>Универсальное</td><td><a href="pages/usf.html">USF</a></td></tr>
+          <tr><td>Double MilSec</td><td>Двойная специализация</td><td><a href="pages/dms.html">DMS</a></td></tr>
+          <tr><td>Feld Demons</td><td>Взвод спецназначения</td><td><a href="pages/fd.html">FD</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="personnel" class="reveal">Учёт оперативного состава</h2>
+    <ul class="reveal">
+      <li><strong>Оперативный состав ЧВК «MSF-043»</strong> — <a href="pages/roster.html">открыть таблицу</a></li>
+    </ul>
+
+  </main>
+</div>
+
+<button class="back-to-top" id="backToTop" title="Наверх">^</button>
+
+<script type="module" src="js/script.js"></script>
+<script type="module" src="js/auth-ui.js"></script>
+</body>
+</html>

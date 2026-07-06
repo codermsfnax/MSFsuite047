@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSF-043 | Заполнитель рапортов</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" type="image/png" href="../assets/images/msf.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .report-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      animation: panelIn 0.5s var(--ease-spring);
+    }
+    @keyframes panelIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .panel-heading {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+    .panel-sub {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.7rem;
+      margin-bottom: 2rem;
+    }
+    .type-card { cursor: pointer; display: block; }
+    .type-card input { display: none; }
+    .type-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 1rem;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+    .type-card input:checked + .type-card-content {
+      border-color: var(--accent);
+      box-shadow: 0 0 20px var(--accent-glow);
+      background: rgba(155,89,182,0.05);
+    }
+    .type-card-content:hover {
+      border-color: var(--accent-dim);
+      transform: translateY(-2px);
+    }
+    .type-card-title { font-size: 0.75rem; font-weight: 600; }
+    .type-card-access {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--text-tertiary);
+    }
+    .form-container { margin-top: 1rem; }
+    .form-container.hidden { display: none; }
+    .form-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 900px) { .form-layout { grid-template-columns: 1fr; } }
+    .form-column {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .loading-placeholder {
+      text-align: center;
+      color: var(--text-tertiary);
+      padding: 2rem;
+      font-family: var(--font-mono);
+    }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.06em;
+      color: var(--text-tertiary);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+    .form-textarea { resize: vertical; min-height: 60px; }
+    .form-select { cursor: pointer; }
+    .form-select option { background: var(--bg); color: var(--text); }
+    .form-row { display: flex; gap: 1rem; }
+    .form-group.half { flex: 1; }
+    .conditional-block.hidden { display: none; }
+    .checkbox-group { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .checkbox-label input[type="checkbox"] { accent-color: var(--accent); }
+    .report-form h3 {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin: 1.5rem 0 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .preview-column {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .preview-toolbar-title {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      color: var(--text-tertiary);
+    }
+    .preview-actions { display: flex; gap: 0.4rem; }
+    .toolbar-btn {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.8rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .toolbar-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .toolbar-btn.primary { border-color: var(--accent); color: var(--accent); }
+    .toolbar-btn.primary:hover { background: var(--accent); color: #fff; }
+    .preview-box {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      max-height: 60vh;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .preview-empty {
+      color: var(--text-tertiary);
+      text-align: center;
+      padding: 2rem;
+    }
+    .access-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .access-row-label { font-family: var(--font-mono); font-size: 0.55rem; color: var(--text-tertiary); }
+    .access-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.7rem;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+    .access-badge.delta { color: #9B59B6; border-color: #9B59B6; box-shadow: 0 0 10px rgba(155,89,182,0.4); }
+    .access-badge.gamma { color: #6baed6; border-color: #6baed6; box-shadow: 0 0 10px rgba(107,174,214,0.4); }
+    .access-badge.beta { color: #e8a0c8; border-color: #e8a0c8; box-shadow: 0 0 10px rgba(232,160,200,0.4); }
+    .access-badge.alpha { color: #cc5555; border-color: #cc5555; box-shadow: 0 0 10px rgba(204,85,85,0.4); }
+    .footer-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: 1.5rem;
+    }
+    .footer-prompt {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+    .footer-input {
+      flex: 1;
+      max-width: 500px;
+      padding: 0.45rem 0.6rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .footer-input:focus { border-color: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+    .footer-input::placeholder { color: var(--text-tertiary); }
+    .notification {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 9999;
+      padding: 0.8rem 1.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.06em;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text);
+      opacity: 0;
+      transform: translateX(100%);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    .notification.success { border-color: #4caf84; color: #4caf84; }
+    .notification.warning { border-color: #d4a844; color: #d4a844; }
+    .notification.error { border-color: #cc5555; color: #cc5555; }
+    .notification.info { border-color: #6baed6; color: #6baed6; }
+    .report-back {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid transparent;
+    }
+    .report-back:hover { color: var(--accent); border-color: var(--border); }
+  </style>
+</head>
+<body>
+
+<canvas class="canvas-3d" id="bgCanvas"></canvas>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo">MSF-043</a>
+    <div class="wiki-title-group">
+      <span class="wiki-site-title">ЗАПОЛНИТЕЛЬ РАПОРТОВ</span>
+      <span class="wiki-site-subtitle">Система оформления документации</span>
+    </div>
+    <div class="access-row">
+      <span class="access-row-label">ДОСТУП:</span>
+      <span id="accessLevel" class="access-badge delta">Δ-DELTA</span>
+    </div>
+    <nav>
+      <ul class="wiki-nav">
+        <li><a href="../index.html">Главная</a></li>
+        <li><a href="../pages/reglament.html">Регламент</a></li>
+        <li><a href="../pages/karbogreyd.html">Карбогрейд</a></li>
+        <li><a href="../pages/struktura.html">Структура</a></li>
+        <li><a href="../pages/korpusa.html">Корпуса</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="main-container">
+  <main class="content" style="max-width:100%;">
+    <div class="report-panel">
+      <h1 class="wiki-article-title">ФОРМА ЗАПОЛНЕНИЯ РАПОРТА</h1>
+      <p class="wiki-article-subtitle">Выберите тип документа для заполнения</p>
+
+      <div class="type-grid">
+        <label class="type-card">
+          <input type="radio" name="reportType" value="promotion">
+          <span class="type-card-content">
+            <span class="type-card-title">Рапорт о повышении</span>
+            <span class="type-card-access">Доступ: Gamma+</span>
+          </span>
+        </label>
+        <label class="type-card">
+          <input type="radio" name="reportType" value="discipline">
+          <span class="type-card-content">
+            <span class="type-card-title">Рапорт о взыскании</span>
+            <span class="type-card-access">Доступ: Gamma+</span>
+          </span>
+        </label>
+        <label class="type-card">
+          <input type="radio" name="reportType" value="absence">
+          <span class="type-card-content">
+            <span class="type-card-title">Рапорт об отсутствии</span>
+            <span class="type-card-access">Доступ: Delta+</span>
+          </span>
+        </label>
+        <label class="type-card">
+          <input type="radio" name="reportType" value="leave">
+          <span class="type-card-content">
+            <span class="type-card-title">Рапорт об отпуске</span>
+            <span class="type-card-access">Доступ: Delta+</span>
+          </span>
+        </label>
+        <label class="type-card">
+          <input type="radio" name="reportType" value="operation">
+          <span class="type-card-content">
+            <span class="type-card-title">Рапорт о результате операции</span>
+            <span class="type-card-access">Доступ: Gamma+</span>
+          </span>
+        </label>
+      </div>
+
+      <div id="formContainer" class="form-container hidden">
+        <div class="form-layout">
+          <div id="formColumn" class="form-column">
+            <div class="loading-placeholder">Загрузка формы...</div>
+          </div>
+          <div class="preview-column">
+            <div class="preview-toolbar">
+              <span class="preview-toolbar-title">ПРЕДПРОСМОТР</span>
+              <div class="preview-actions">
+                <button id="copyBtn" class="toolbar-btn">КОПИРОВАТЬ</button>
+                <button id="sendBtn" class="toolbar-btn primary">ОТПРАВИТЬ</button>
+              </div>
+            </div>
+            <div id="preview" class="preview-box">
+              <p class="preview-empty">Выберите тип рапорта и заполните форму</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-row">
+        <span class="footer-prompt">> КОД ДОСТУПА:</span>
+        <input type="text" id="accessInput" class="footer-input" placeholder="Введите код доступа" maxlength="60" autocomplete="off">
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="notification" class="notification hidden"></div>
+
+<script src="../js/script.js"></script>
+<script src="js/modules/loader.js"></script>
+<script src="js/modules/prom.js"></script>
+<script src="js/modules/disc.js"></script>
+<script src="js/modules/abs.js"></script>
+<script src="js/modules/leave.js"></script>
+<script src="js/modules/operation.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

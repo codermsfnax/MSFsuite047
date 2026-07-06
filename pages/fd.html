@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FD — Feld Demons — MSF-043</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../assets/images/msf.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #cc5555; --accent-dim: #993333; --accent-glow: rgba(204,85,85,0.4); --accent-rgb: 204,85,85; }
+    .roster-member { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.8rem; background: var(--bg); border: 1px solid var(--border-light); border-radius: 8px; font-size: 0.62rem; font-family: var(--font-mono); transition: all 0.2s ease; margin-bottom: 0.3rem; }
+    .roster-member:hover { border-color: var(--accent); background: var(--bg-elevated); }
+    .roster-member-left { display: flex; align-items: center; gap: 0.5rem; }
+    .roster-member-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+    .roster-member-name { color: var(--text); font-weight: 500; }
+    .roster-member-name a { color: var(--accent); text-decoration: none; }
+    .roster-member-name a:hover { text-decoration: underline; }
+    .roster-member-badges { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .roster-badge { font-size: 0.5rem; padding: 0.15rem 0.4rem; border-radius: 4px; font-family: var(--font-mono); }
+    .roster-section-title { font-family: var(--font-display); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin: 1rem 0 0.4rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border-light); }
+    .badge-commander { background: rgba(204,85,85,0.15); color: #cc5555; border: 1px solid rgba(204,85,85,0.4); }
+    .badge-deputy { background: rgba(212,168,68,0.12); color: #d4a844; border: 1px solid rgba(212,168,68,0.4); }
+    .badge-junior { background: rgba(76,175,132,0.12); color: #4caf84; border: 1px solid rgba(76,175,132,0.4); }
+    .badge-member { background: rgba(204,85,85,0.1); color: #cc5555; border: 1px solid rgba(204,85,85,0.3); }
+    .badge-trainee { background: rgba(136,136,160,0.1); color: #8888a0; border: 1px solid rgba(136,136,160,0.3); }
+    .badge-ssc { background: rgba(107,174,214,0.1); color: #6baed6; border: 1px solid #6baed6; }
+    .badge-rsc { background: rgba(232,160,200,0.1); color: #e8a0c8; border: 1px solid #e8a0c8; }
+    .badge-msc { background: rgba(76,175,132,0.1); color: #4caf84; border: 1px solid #4caf84; }
+    .badge-tsc { background: rgba(212,168,68,0.1); color: #d4a844; border: 1px solid #d4a844; }
+    .loading-roster { text-align: center; padding: 1rem; color: var(--text-tertiary); font-family: var(--font-mono); font-size: 0.6rem; }
+  </style>
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.157.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/" } }
+  </script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo">MSF-043</a>
+    <nav><ul class="header-nav">
+      <li><a href="../index.html">Главная</a></li><li><a href="reglament.html">Регламент</a></li><li><a href="karbogreyd.html">Карбогрейд</a></li><li><a href="struktura.html">Структура</a></li><li><a href="korpusa.html">Корпуса</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<div class="main-container">
+  <aside class="sidebar">
+    <div class="sidebar-block"><p class="sidebar-title">Подразделения</p><ul class="sidebar-list"><li><a href="usf.html">USF</a></li><li><a href="dms.html">DMS</a></li><li><a href="fd.html">Feld Demons</a></li></ul></div>
+    <div class="sidebar-block"><p class="sidebar-title">Разделы</p><ul class="sidebar-list">
+      <li><a href="#general">Общие положения</a></li><li><a href="#principles">Комплектование</a></li><li><a href="#qualification">Квалификация</a></li><li><a href="#hierarchy">Иерархия</a></li><li><a href="#tactics">Тактика</a></li><li><a href="#gear">Экипировка</a></li><li><a href="#roster">Состав</a></li>
+    </ul></div>
+  </aside>
+
+  <main class="content">
+    <div class="content-header reveal"><p class="content-label">Специализированный взвод</p><h1 class="content-title">Feld Demons</h1><p class="content-subtitle">Диверсионные атаки. Прорыв обороны. Нестандартные тактические решения.</p></div>
+    <div class="unit-logo reveal"><img src="../assets/images/fd.png" alt="FD" onerror="this.style.display='none'; this.parentElement.innerHTML='<p style=text-align:center;color:var(--text-tertiary)>[ Feld Demons ]</p>'"></div>
+
+    <div class="toc reveal"><p class="toc-title">Содержание</p><ol>
+      <li><a href="#general">Общие положения</a></li><li><a href="#principles">Принципы комплектования</a></li><li><a href="#qualification">Оценка квалификации</a></li><li><a href="#hierarchy">Иерархия</a></li><li><a href="#tactics">Тактическое применение</a></li><li><a href="#gear">Унификация экипировки</a></li><li><a href="#roster">Состав взвода</a></li>
+    </ol></div>
+
+    <h2 id="general">1. Общие положения</h2>
+    <p>Взвод «Feld Demons» — специализированный тактический взвод из оперативников с подтверждённым боевым опытом. Задачи: диверсионные атаки в тылу противника, нейтрализация приоритетных целей, прорыв обороны, эвакуация.</p>
+
+    <h2 id="principles">2. Принципы комплектования</h2>
+    <p>Каждый оперативник обязан владеть компетенциями своего корпуса на уровне не ниже XXX-2. Набор — на добровольной основе. Принудительный перевод — только по приказу Директора.</p>
+
+    <h2 id="qualification">3. Оценка квалификации</h2>
+    <p>Проверка Командиром взвода с привлечением инструкторов. При несоответствии — акт направляется О.Д. Вторая попытка — в течение 14 дней. При повторном провале — отчисление без права возврата 30 дней.</p>
+
+    <h2 id="hierarchy">4. Иерархия</h2>
+    <div class="table-wrap reveal"><table><thead><tr><th>Уровень</th><th>Назначение</th></tr></thead><tbody>
+      <tr><td>Командир взвода</td><td>Г.Д. или О.Д.</td></tr>
+      <tr><td>Заместитель командира</td><td>Командиром взвода</td></tr>
+      <tr><td>Младший командир</td><td>Из состава взвода</td></tr>
+      <tr><td>Штатный</td><td>—</td></tr>
+      <tr><td>Кандидат</td><td>—</td></tr>
+    </tbody></table></div>
+
+    <h2 id="tactics">5. Тактическое применение</h2>
+    <p>Диверсионные и рейдовые действия в тылу, ликвидация целей, прорыв обороны, эвакуация.</p>
+
+    <h2 id="gear">6. Унификация экипировки</h2>
+    <h3>Голова</h3>
+    <div class="table-wrap reveal"><table><thead><tr><th>Элемент</th><th>Наименование</th></tr></thead><tbody>
+      <tr><td>Шлем</td><td>Gator Bump, Black</td></tr><tr><td>ПНВ</td><td>AN/PVS-31C | GPNVG-18</td></tr><tr><td>Наушники</td><td>SWAT-Set V</td></tr><tr><td>Противогаз</td><td>M50</td></tr>
+    </tbody></table></div>
+    <h3>Торс</h3>
+    <div class="table-wrap reveal"><table><thead><tr><th>Элемент</th><th>Наименование</th></tr></thead><tbody>
+      <tr><td>Верх</td><td>H000, Graphite Heather</td></tr><tr><td>Низ</td><td>BDU, Black</td></tr><tr><td>Бронежилет</td><td>6094A, Black</td></tr><tr><td>Рюкзак</td><td>6B46, Black</td></tr><tr><td>Перчатки</td><td>Nitrile, Black</td></tr><tr><td>Ремень</td><td>GVS Low Profile, Black</td></tr>
+    </tbody></table></div>
+
+    <h2 id="roster">7. Состав взвода</h2>
+    <div id="rosterContent" class="loading-roster">Загрузка...</div>
+  </main>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+(async () => {
+  const res = await fetch('../keys.json'); const keys = await res.json();
+  const app = initializeApp(keys.firebase); const db = getFirestore(app);
+  const snap = await getDocs(collection(db, 'users'));
+  const users = []; snap.forEach(d => users.push({ id: d.id, ...d.data() }));
+  const members = users.filter(u => u.unitRoles?.fd);
+  const order = { commander:0, deputy:1, junior:2, member:3, trainee:4 };
+  members.sort((a,b) => (order[a.unitRoles.fd]||5) - (order[b.unitRoles.fd]||5));
+  const labels = { commander:'Командир', deputy:'Зам. командира', junior:'Мл. командир', member:'Штатный', trainee:'Учебный' };
+  let html = '', cur = '';
+  if (!members.length) html = '<p style="color:var(--text-tertiary);text-align:center;padding:1rem;">Нет участников</p>';
+  else members.forEach(u => {
+    const r = u.unitRoles.fd;
+    if (r !== cur) { cur = r; html += `<div class="roster-section-title">${labels[r]||r}</div>`; }
+    const badges = (u.corpsRoles||[]).map(r => `<span class="roster-badge badge-${r.role.split('-')[0].toLowerCase()}">${r.role}</span>`).join('');
+    html += `<div class="roster-member"><div class="roster-member-left">${u.avatar?`<img src="${u.avatar}" class="roster-member-avatar">`:''}<span class="roster-member-name"><a href="profile.html?id=${u.id}">${u.callsign||'—'}</a></span></div><div class="roster-member-badges">${badges}</div></div>`;
+  });
+  document.getElementById('rosterContent').innerHTML = html;
+  setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 100);
+})();
+</script>
+</body>
+</html>

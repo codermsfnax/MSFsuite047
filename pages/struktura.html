@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Структура — MSF-043</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../assets/images/msf.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-modal">
+    <input type="text" class="search-input" id="searchInput" placeholder="Поиск по сайту..." autocomplete="off">
+    <div class="search-results" id="searchResults"></div>
+    <button class="modal-close" id="searchClose">Закрыть</button>
+  </div>
+</div>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo">MSF-043</a>
+    <nav>
+      <ul class="header-nav">
+        <li><a href="../index.html">Главная</a></li>
+        <li><a href="reglament.html">Регламент</a></li>
+        <li><a href="karbogreyd.html">Карбогрейд</a></li>
+        <li><a href="struktura.html" class="active">Структура</a></li>
+        <li><a href="korpusa.html">Корпуса</a></li>
+      </ul>
+    </nav>
+    <button class="search-btn" id="searchBtn" title="Поиск">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="main-container">
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <p class="sidebar-title">Разделы</p>
+      <ul class="sidebar-list">
+        <li><a href="#tree">Дерево командования</a></li>
+        <li><a href="#high-command">Высшее руководство</a></li>
+        <li><a href="#staff">Командный состав</a></li>
+        <li><a href="#personnel">Личный состав</a></li>
+        <li><a href="#units">Подразделения</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-block">
+      <p class="sidebar-title">Документы</p>
+      <ul class="sidebar-list">
+        <li><a href="reglament.html">Регламент</a></li>
+        <li><a href="karbogreyd.html">Карбогрейд</a></li>
+        <li><a href="korpusa.html">Корпуса</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="content-header reveal">
+      <p class="content-label">Организация</p>
+      <h1 class="content-title">Структура ЧВК</h1>
+      <p class="content-subtitle">Иерархическая структура командования и подчинения.</p>
+    </div>
+
+    <div class="toc reveal">
+      <p class="toc-title">Содержание</p>
+      <ol>
+        <li><a href="#tree">Дерево командования</a></li>
+        <li><a href="#high-command">Высшее руководство</a></li>
+        <li><a href="#staff">Командный состав</a></li>
+        <li><a href="#personnel">Личный состав</a></li>
+        <li><a href="#units">Подразделения и взводы</a></li>
+      </ol>
+    </div>
+
+    <h2 id="tree">Дерево командования</h2>
+    <div class="org-tree reveal">
+      <div class="org-node" style="border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow);">
+        <div class="org-node-title">Генеральный Директор</div>
+        <div class="org-node-sub">Высшее командование</div>
+      </div>
+      <div class="org-line"></div>
+      <div class="org-node">
+        <div class="org-node-title">Операционный Директор</div>
+        <div class="org-node-sub">Заместитель Г.Д.</div>
+      </div>
+      <div class="org-line"></div>
+      <div class="org-branch">
+        <div class="org-branch-line"></div>
+        <div class="org-level">
+          <div class="org-node"><div class="org-node-title">Командир SSC</div><div class="org-node-sub">Штурмовой корпус</div></div>
+          <div class="org-node"><div class="org-node-title">Командир RSC</div><div class="org-node-sub">Разведка</div></div>
+          <div class="org-node"><div class="org-node-title">Командир MSC</div><div class="org-node-sub">Медицинский</div></div>
+          <div class="org-node"><div class="org-node-title">Командир TSC</div><div class="org-node-sub">Технический</div></div>
+          <div class="org-node"><div class="org-node-title">Командир ERS</div><div class="org-node-sub">Дипломатия</div></div>
+        </div>
+      </div>
+      <div class="org-line"></div>
+      <div class="org-branch">
+        <div class="org-branch-line"></div>
+        <div class="org-level">
+          <div class="org-node"><div class="org-node-title">Инструкторы</div><div class="org-node-sub">Подготовка</div></div>
+          <div class="org-node"><div class="org-node-title">Аналитики</div><div class="org-node-sub">K4+</div></div>
+          <div class="org-node"><div class="org-node-title">Логисты</div><div class="org-node-sub">K5+</div></div>
+          <div class="org-node"><div class="org-node-title">Модераторы</div><div class="org-node-sub">K3+</div></div>
+        </div>
+      </div>
+      <div class="org-line"></div>
+      <div class="org-branch">
+        <div class="org-branch-line"></div>
+        <div class="org-level">
+          <div class="org-node"><div class="org-node-title">Оперативники MSF</div><div class="org-node-sub">K1–K6</div></div>
+          <div class="org-node"><div class="org-node-title">USF</div><div class="org-node-sub">Универсальный</div></div>
+          <div class="org-node"><div class="org-node-title">DMS</div><div class="org-node-sub">Две специализации</div></div>
+          <div class="org-node"><div class="org-node-title">Feld Demons</div><div class="org-node-sub">Спецвзвод</div></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="high-command">1. Высшее руководство</h2>
+    <h3>Генеральный Директор (Г.Д.)</h3>
+    <p>Высшее должностное лицо ЧВК. Определяет стратегию развития, утверждает Положения и Регламент, назначает Операционного Директора и Командиров корпусов, подписывает ключевые внешние соглашения, имеет право вето. В отсутствие Г.Д. полномочия переходят к О.Д.</p>
+    <h3>Операционный Директор (О.Д.)</h3>
+    <p>Заместитель Генерального Директора. Управление личным составом, внешние переговоры, координация совместных операций, оперативные решения в кризисных ситуациях.</p>
+
+    <h2 id="staff">2. Командный состав</h2>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Должность</th><th>Обязанности</th><th>Требования</th></tr></thead>
+        <tbody>
+          <tr><td>Командир корпуса</td><td>Боевая готовность, распределение ролей, дисциплина</td><td>XXX-4</td></tr>
+          <tr><td>Инструктор</td><td>Подготовка, аттестация, зачёты</td><td>Назначается</td></tr>
+          <tr><td>Аналитик</td><td>Сбор и анализ оперативной информации</td><td>K4+</td></tr>
+          <tr><td>Логист</td><td>Анализ внутренних процессов, тестирование процедур</td><td>K5+</td></tr>
+          <tr><td>Модератор</td><td>Дисциплина на Discord-сервере</td><td>K3+, опыт модерации</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="personnel">3. Личный состав</h2>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Категория</th><th>Описание</th></tr></thead>
+        <tbody>
+          <tr><td>Оперативник MSF</td><td>Штатный оперативник с грейдом K1–K6 и корпусной принадлежностью.</td></tr>
+          <tr><td>Оперативник USF</td><td>Универсальный боец, аттестованный по всем четырём корпусам.</td></tr>
+          <tr><td>Оперативник DMS</td><td>Специалист по двум выбранным корпусам.</td></tr>
+          <tr><td>Оперативник FD</td><td>Боец взвода «Feld Demons» с подтверждённым боевым опытом.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="units">4. Подразделения и взводы</h2>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Подразделение</th><th>Полное название</th><th>Тип</th></tr></thead>
+        <tbody>
+          <tr><td><a href="usf.html">USF</a></td><td>Universal Strike Force</td><td>Универсальное, все корпуса</td></tr>
+          <tr><td><a href="dms.html">DMS</a></td><td>Double MilSec</td><td>Двойная специализация</td></tr>
+          <tr><td><a href="fd.html">FD</a></td><td>Feld Demons</td><td>Спецвзвод</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<button class="back-to-top" id="backToTop" title="Наверх">^</button>
+
+<script type="module" src="../js/script.js"></script>
+</body>
+</html>

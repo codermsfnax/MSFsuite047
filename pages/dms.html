@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMS — Double MilSec — MSF-043</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../assets/images/msf.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #e8a0c8; --accent-dim: #b87098; --accent-glow: rgba(232,160,200,0.4); --accent-rgb: 232,160,200; }
+    .roster-member { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0.8rem; background: var(--bg); border: 1px solid var(--border-light); border-radius: 8px; font-size: 0.62rem; font-family: var(--font-mono); transition: all 0.2s ease; margin-bottom: 0.3rem; }
+    .roster-member:hover { border-color: var(--accent); background: var(--bg-elevated); }
+    .roster-member-left { display: flex; align-items: center; gap: 0.5rem; }
+    .roster-member-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+    .roster-member-name { color: var(--text); font-weight: 500; }
+    .roster-member-name a { color: var(--accent); text-decoration: none; }
+    .roster-member-name a:hover { text-decoration: underline; }
+    .roster-member-badges { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .roster-badge { font-size: 0.5rem; padding: 0.15rem 0.4rem; border-radius: 4px; font-family: var(--font-mono); }
+    .roster-section-title { font-family: var(--font-display); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); margin: 1rem 0 0.4rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border-light); }
+    .badge-commander { background: rgba(204,85,85,0.15); color: #cc5555; border: 1px solid rgba(204,85,85,0.4); }
+    .badge-deputy { background: rgba(212,168,68,0.12); color: #d4a844; border: 1px solid rgba(212,168,68,0.4); }
+    .badge-junior { background: rgba(76,175,132,0.12); color: #4caf84; border: 1px solid rgba(76,175,132,0.4); }
+    .badge-member { background: rgba(232,160,200,0.1); color: #e8a0c8; border: 1px solid rgba(232,160,200,0.3); }
+    .badge-trainee { background: rgba(136,136,160,0.1); color: #8888a0; border: 1px solid rgba(136,136,160,0.3); }
+    .badge-ssc { background: rgba(107,174,214,0.1); color: #6baed6; border: 1px solid #6baed6; }
+    .badge-rsc { background: rgba(232,160,200,0.1); color: #e8a0c8; border: 1px solid #e8a0c8; }
+    .badge-msc { background: rgba(76,175,132,0.1); color: #4caf84; border: 1px solid #4caf84; }
+    .badge-tsc { background: rgba(212,168,68,0.1); color: #d4a844; border: 1px solid #d4a844; }
+    .loading-roster { text-align: center; padding: 1rem; color: var(--text-tertiary); font-family: var(--font-mono); font-size: 0.6rem; }
+  </style>
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.157.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/" } }
+  </script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo">MSF-043</a>
+    <nav><ul class="header-nav">
+      <li><a href="../index.html">Главная</a></li><li><a href="reglament.html">Регламент</a></li><li><a href="karbogreyd.html">Карбогрейд</a></li><li><a href="struktura.html">Структура</a></li><li><a href="korpusa.html">Корпуса</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<div class="main-container">
+  <aside class="sidebar">
+    <div class="sidebar-block"><p class="sidebar-title">Подразделения</p><ul class="sidebar-list"><li><a href="usf.html">USF</a></li><li><a href="dms.html">DMS</a></li><li><a href="fd.html">Feld Demons</a></li></ul></div>
+    <div class="sidebar-block"><p class="sidebar-title">Разделы</p><ul class="sidebar-list">
+      <li><a href="#general">Общие положения</a></li><li><a href="#principles">Специализации</a></li><li><a href="#hierarchy">Иерархия</a></li><li><a href="#tactics">Тактика</a></li><li><a href="#requirements">Требования</a></li><li><a href="#roster">Состав</a></li>
+    </ul></div>
+  </aside>
+
+  <main class="content">
+    <div class="content-header reveal"><p class="content-label">Элитное подразделение</p><h1 class="content-title">Double MilSec</h1><p class="content-subtitle">Две специализации. Гибкость. Диверсионные и рейдовые действия.</p></div>
+    <div class="unit-logo reveal"><img src="../assets/images/dms.png" alt="DMS" onerror="this.style.display='none'; this.parentElement.innerHTML='<p style=text-align:center;color:var(--text-tertiary)>[ DMS ]</p>'"></div>
+
+    <div class="toc reveal"><p class="toc-title">Содержание</p><ol>
+      <li><a href="#general">Общие положения</a></li><li><a href="#principles">Принципы комплектования и специализации</a></li><li><a href="#hierarchy">Иерархия и командные полномочия</a></li><li><a href="#tactics">Тактическое применение</a></li><li><a href="#requirements">Требования к кандидатам</a></li><li><a href="#roster">Состав подразделения</a></li>
+    </ol></div>
+
+    <h2 id="general">1. Общие положения</h2>
+    <p>Подразделение DMS представляет собой элитное универсальное формирование, оперативники которого обладают двумя корпусными специализациями (SSC, RSC, MSC, TSC на выбор). Доктрина — совмещение двух специализаций для гибкости и автономности.</p>
+
+    <h2 id="principles">2. Принципы комплектования и специализации</h2>
+    <p>Два корпуса на выбор. Повышение синхронное по обеим специализациям. Смена — не чаще раза в 14 дней. Оперативник не имеет права отказываться от задач по любой из своих специализаций.</p>
+
+    <h2 id="hierarchy">3. Иерархия и командные полномочия</h2>
+    <div class="table-wrap reveal"><table><thead><tr><th>Уровень</th><th>Полномочия</th></tr></thead><tbody>
+      <tr><td>Командир подразделения</td><td>Полное руководство, отбор, планирование.</td></tr>
+      <tr><td>Заместитель Командира</td><td>Замещение командира.</td></tr>
+      <tr><td>Штатный</td><td>Самостоятельное выполнение задач, без права командования.</td></tr>
+      <tr><td>Кандидат</td><td>Испытательный срок.</td></tr>
+    </tbody></table></div>
+
+    <h2 id="tactics">4. Тактическое применение</h2>
+    <p>Приоритет — операции с ограниченным составом, где совмещение специализаций сокращает численность группы без потери функциональности.</p>
+
+    <h2 id="requirements">5. Требования к кандидатам</h2>
+    <p>Грейд не ниже K2, положительная характеристика, отсутствие взысканий. Проверки квалификации — не реже раза в 14 дней.</p>
+
+    <h2 id="roster">6. Состав подразделения</h2>
+    <div id="rosterContent" class="loading-roster">Загрузка...</div>
+  </main>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+(async () => {
+  const res = await fetch('../keys.json'); const keys = await res.json();
+  const app = initializeApp(keys.firebase); const db = getFirestore(app);
+  const snap = await getDocs(collection(db, 'users'));
+  const users = []; snap.forEach(d => users.push({ id: d.id, ...d.data() }));
+  const members = users.filter(u => u.unitRoles?.dms);
+  const order = { commander:0, deputy:1, junior:2, member:3, trainee:4 };
+  members.sort((a,b) => (order[a.unitRoles.dms]||5) - (order[b.unitRoles.dms]||5));
+  const labels = { commander:'Командир', deputy:'Зам. командира', junior:'Мл. командир', member:'Штатный', trainee:'Учебный' };
+  let html = '', cur = '';
+  if (!members.length) html = '<p style="color:var(--text-tertiary);text-align:center;padding:1rem;">Нет участников</p>';
+  else members.forEach(u => {
+    const r = u.unitRoles.dms;
+    if (r !== cur) { cur = r; html += `<div class="roster-section-title">${labels[r]||r}</div>`; }
+    const badges = (u.corpsRoles||[]).map(r => `<span class="roster-badge badge-${r.role.split('-')[0].toLowerCase()}">${r.role}</span>`).join('');
+    html += `<div class="roster-member"><div class="roster-member-left">${u.avatar?`<img src="${u.avatar}" class="roster-member-avatar">`:''}<span class="roster-member-name"><a href="profile.html?id=${u.id}">${u.callsign||'—'}</a></span></div><div class="roster-member-badges">${badges}</div></div>`;
+  });
+  document.getElementById('rosterContent').innerHTML = html;
+  setTimeout(() => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible')), 100);
+})();
+</script>
+</body>
+</html>

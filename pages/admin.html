@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Админ-панель — MSF-043</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../assets/images/msf.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .admin-wrap { display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 1.4rem; }
+    .admin-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 14px; padding: 1.6rem; transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease, opacity 0.5s ease; position: relative; overflow: hidden; opacity: 0; transform: translateY(20px); }
+    .admin-card.visible { opacity: 1; transform: translateY(0); }
+    .admin-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity 0.4s ease; }
+    .admin-card:hover { border-color: var(--accent-dim); box-shadow: 0 0 35px rgba(155,89,182,0.3), 0 0 60px rgba(155,89,182,0.1); transform: translateY(-4px); }
+    .admin-card:hover::before { opacity: 1; }
+    .admin-card-header { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.1rem; padding-bottom: 0.7rem; border-bottom: 1px solid var(--border-light); }
+    .admin-card-icon { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-dim), rgba(155,89,182,0.2)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(155,89,182,0.3); }
+    .admin-card-icon svg { width: 18px; height: 18px; stroke: var(--accent); fill: none; stroke-width: 1.8; }
+    .admin-card-title { font-family: var(--font-display); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text); position: relative; }
+    .admin-card-title::after { content: ''; display: block; width: 0; height: 2px; background: var(--accent); margin-top: 3px; transition: width 0.5s ease; }
+    .admin-card:hover .admin-card-title::after { width: 40px; }
+    .admin-field { margin-bottom: 0.75rem; }
+    .admin-field label { display: block; font-family: var(--font-mono); font-size: 0.52rem; letter-spacing: 0.1em; color: var(--text-tertiary); text-transform: uppercase; margin-bottom: 0.25rem; }
+    .admin-field input, .admin-field select { width: 100%; padding: 0.5rem 0.6rem; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-mono); font-size: 0.62rem; outline: none; transition: all 0.2s ease; }
+    .admin-field input:focus, .admin-field select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(155,89,182,0.1); }
+    .admin-btn { width: 100%; padding: 0.55rem; background: transparent; color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; font-family: var(--font-display); font-size: 0.62rem; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s ease; margin-top: 0.4rem; position: relative; overflow: hidden; }
+    .admin-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: var(--accent); transition: left 0.35s ease; z-index: 0; }
+    .admin-btn:hover::before { left: 0; }
+    .admin-btn:hover { color: #fff; box-shadow: 0 0 25px var(--accent-glow); }
+    .admin-btn span { position: relative; z-index: 1; }
+    .admin-btn.danger { border-color: #993333; color: #993333; }
+    .admin-btn.danger::before { background: #993333; }
+    .admin-btn.danger:hover { color: #fff; box-shadow: 0 0 20px rgba(153,51,51,0.4); }
+    .admin-btn.approve { border-color: #3a8a6a; color: #3a8a6a; }
+    .admin-btn.approve::before { background: #3a8a6a; }
+    .admin-btn.approve:hover { color: #fff; box-shadow: 0 0 20px rgba(58,138,106,0.4); }
+    .admin-row { display: flex; gap: 0.6rem; }
+    .admin-row .admin-field { flex: 1; }
+    .color-picker-wrap { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .color-picker-wrap input[type="color"] { width: 38px; height: 38px; border: 2px solid var(--border); border-radius: 8px; cursor: pointer; background: none; padding: 2px; }
+    .color-presets { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .color-preset { width: 22px; height: 22px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; }
+    .color-preset:hover { border-color: #fff; transform: scale(1.25); }
+    .section-divider { grid-column: 1 / -1; border-top: 1px solid var(--border); margin: 1rem 0 0.5rem; padding-top: 0.5rem; }
+    .section-title { grid-column: 1 / -1; font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text); margin: 0.5rem 0; }
+    .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--bg-elevated); border: 1px solid var(--border); padding: 0.6rem 1.2rem; font-family: var(--font-mono); font-size: 0.6rem; z-index: 99999; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+    .toast.show { opacity: 1; }
+    .toast-success { border-color: #4caf84; color: #4caf84; }
+    .toast-error { border-color: #cc5555; color: #cc5555; }
+    .toast-info { border-color: #6baed6; color: #6baed6; }
+    .admin-role-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.5rem; padding: 0.15rem 0.4rem; border-radius: 4px; margin-left: 0.3rem; }
+    .admin-role-badge.admin { background: rgba(204,85,85,0.2); color: #cc5555; border: 1px solid rgba(204,85,85,0.4); }
+    .admin-role-badge.od { background: rgba(212,168,68,0.2); color: #d4a844; border: 1px solid rgba(212,168,68,0.4); }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo">MSF-043</a>
+    <nav><ul class="header-nav"><li><a href="../index.html">Главная</a></li><li><a href="reglament.html">Регламент</a></li><li><a href="karbogreyd.html">Карбогрейд</a></li><li><a href="struktura.html">Структура</a></li><li><a href="korpusa.html">Корпуса</a></li></ul></nav>
+    <button class="btn" id="logoutLink" style="padding:0.35rem 1rem;font-size:0.6rem;">Выйти</button>
+  </div>
+</header>
+
+<div class="main-container">
+  <main class="content" style="max-width:100%;" id="adminContent"><p style="text-align:center;padding:3rem;color:var(--text-tertiary);">Загрузка...</p></main>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, updateDoc, collection, getDocs, arrayUnion, setDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+let db, auth, allUsers = [], currentUserData = null, adminEmail = '';
+const CORPS_THRESHOLDS = { 1: 0, 2: 20, 3: 65, 4: 110 };
+const CORPS_MAX = { SSC: 4, RSC: 4, MSC: 3, TSC: 4, ERS: 3 };
+const COLOR_PRESETS = ['#6baed6','#e8a0c8','#4caf84','#d4a844','#9B59B6','#cc5555','#8888a0','#ff8844','#44ccff','#ff66aa','#aadd66','#ff9966'];
+
+// Локализация для подразделений
+const UNIT_NAMES = { usf: 'USF', dms: 'DMS', fd: 'Feld Demons' };
+const ROLE_NAMES = { commander: 'Командир', deputy: 'Зам. командира', junior: 'Мл. командир', member: 'Штатный', trainee: 'Учебный' };
+
+const ICONS = {
+  points: '<svg viewBox="0 0 24 24"><polygon points="12,2 15,9 22,9 16,14 18,21 12,17 6,21 8,14 2,9 9,9"/></svg>',
+  carbomarks: '<svg viewBox="0 0 24 24"><path d="M12,2 L15,9 L22,9 L16,14 L18,21 L12,17 L6,21 L8,14 L2,9 L9,9 Z"/></svg>',
+  role: '<svg viewBox="0 0 24 24"><path d="M12,1 L22,7 L22,17 L12,23 L2,17 L2,7 Z"/></svg>',
+  badge: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>',
+  transfer: '<svg viewBox="0 0 24 24"><path d="M17,8 L21,12 L17,16"/><path d="M3,12 L20,12"/><path d="M7,16 L3,12 L7,8"/></svg>',
+  promote: '<svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="21"/><polyline points="5,10 12,3 19,10"/></svg>',
+  commander: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4,20 C4,16 8,14 12,14 C16,14 20,16 20,20"/><polygon points="12,10 14,7 10,7"/></svg>',
+  msfcode: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/></svg>',
+  request: '<svg viewBox="0 0 24 24"><path d="M4,4 L20,4 L20,16 L4,16 Z"/><polyline points="8,8 12,12 16,8"/><line x1="12" y1="12" x2="12" y2="16"/></svg>',
+  revoke: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+  removeCommander: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/><line x1="18" y1="6" x2="6" y2="18"/></svg>',
+  removeBadge: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="8" y1="8" x2="16" y2="16"/><line x1="16" y1="8" x2="8" y2="16"/></svg>',
+};
+
+(async () => {
+  const res = await fetch('../keys.json'); const keys = await res.json();
+  adminEmail = keys.adminEmail || '';
+  const app = initializeApp(keys.firebase); auth = getAuth(app); db = getFirestore(app);
+  document.getElementById('logoutLink').addEventListener('click', async () => { await signOut(auth); window.location.href = '../index.html'; });
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = '../index.html'; return; }
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (!snap.exists()) { document.getElementById('adminContent').innerHTML = '<p>Пользователь не найден</p>'; return; }
+    currentUserData = snap.data();
+    
+    // Проверяем права: админ ИЛИ оперативный директор
+    const isAdmin = currentUserData.email === adminEmail;
+    const isOD = currentUserData.unitRoles?.od === 'director';
+    const hasAccess = isAdmin || isOD;
+    
+    if (!hasAccess) { 
+      document.getElementById('adminContent').innerHTML = '<h2>Доступ запрещён</h2><p style="color:var(--text-tertiary);">Требуются права Администратора или Оперативного директора.</p>'; 
+      return; 
+    }
+
+    const usersSnap = await getDocs(collection(db, 'users')); allUsers = []; usersSnap.forEach(d => allUsers.push({ id: d.id, ...d.data() }));
+    const usersOptions = allUsers.map(u => `<option value="${u.id}">${u.callsign || u.email}</option>`).join('');
+    const colorPresetsHtml = COLOR_PRESETS.map(c => `<span class="color-preset" style="background:${c}" data-color="${c}"></span>`).join('');
+
+    let html = `<div class="content-header"><p class="content-label">Управление</p><h1 class="content-title">Админ-панель</h1>`;
+    if (isAdmin) html += `<p class="content-subtitle">Полный доступ <span class="admin-role-badge admin">АДМИН</span></p>`;
+    if (isOD) html += `<p class="content-subtitle">Оперативный директор <span class="admin-role-badge od">ОД</span></p>`;
+    html += `</div><div class="admin-wrap">`;
+
+    // === ОБЩИЕ КАРТОЧКИ ДЛЯ ВСЕХ (админ и ОД) ===
+    
+    // 1. Выдача/списание баллов
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.points}</div><div class="admin-card-title">Выдача / списание баллов</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="pointsUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-row"><div class="admin-field"><label>Сумма (+/−)</label><input type="number" id="pointsAmount" value="1"></div><div class="admin-field"><label>Причина</label><input type="text" id="pointsReason" placeholder="Обоснование"></div></div>
+    <button class="admin-btn" id="pointsBtn"><span>ВЫДАТЬ</span></button></div>`;
+
+    // 2. Выдача Карбомарков
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.carbomarks}</div><div class="admin-card-title">Выдача Карбомарков</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="carbomarksUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-row"><div class="admin-field"><label>Количество</label><input type="number" id="carbomarksAmount" value="1" min="1" max="5"></div><div class="admin-field"><label>Основание</label><input type="text" id="carbomarksReason" placeholder="За что"></div></div>
+    <button class="admin-btn" id="carbomarksBtn"><span>ВЫДАТЬ</span></button></div>`;
+
+    // 3. Назначение роли корпуса
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.role}</div><div class="admin-card-title">Назначение роли корпуса</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="roleUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-field"><label>Роль</label><select id="roleSelect" class="form-select"><option value="SSC-1">SSC-1</option><option value="RSC-1">RSC-1</option><option value="MSC-1">MSC-1</option><option value="TSC-1">TSC-1</option><option value="ERS-1">ERS-1</option></select></div>
+    <button class="admin-btn" id="assignRoleBtn"><span>НАЗНАЧИТЬ</span></button></div>`;
+
+    // 4. Кастомный бейдж
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.badge}</div><div class="admin-card-title">Кастомный бейдж</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="badgeUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-field"><label>Текст</label><input type="text" id="badgeLabel" placeholder="Название"></div>
+    <div class="admin-row"><div class="admin-field"><label>Цвет текста</label><div class="color-picker-wrap"><input type="color" id="badgeColor" value="#ffffff">${colorPresetsHtml}</div></div><div class="admin-field"><label>Цвет фона</label><div class="color-picker-wrap"><input type="color" id="badgeBg" value="#9B59B6">${colorPresetsHtml}</div></div></div>
+    <button class="admin-btn" id="assignBadgeBtn"><span>ВЫДАТЬ</span></button></div>`;
+
+    // 5. Перевод в подразделение (С ПЕРЕЗАПИСЬЮ, а не добавлением)
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.transfer}</div><div class="admin-card-title">Перевод в подразделение</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="transferUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-field"><label>Подразделение</label><select id="transferUnit" class="form-select"><option value="usf">USF</option><option value="dms">DMS</option><option value="fd">Feld Demons</option></select></div>
+    <div class="admin-field"><label>Должность</label><select id="transferRole" class="form-select"><option value="commander">Командир</option><option value="deputy">Зам. командира</option><option value="junior">Мл. командир</option><option value="member">Штатный</option><option value="trainee">Учебный</option></select></div>
+    <button class="admin-btn" id="transferBtn"><span>ПЕРЕВЕСТИ (заменить)</span></button>
+    <p style="font-size:0.5rem;color:var(--text-tertiary);margin-top:0.3rem;">Старое подразделение будет удалено</p></div>`;
+
+    // 6. Повышение уровня корпуса
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.promote}</div><div class="admin-card-title">Повышение уровня корпуса</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="promoUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-row"><div class="admin-field"><label>Текущая роль</label><select id="promoCurrentRole" class="form-select"><option value="">Выберите</option></select></div><div class="admin-field"><label>Новая роль</label><select id="promoNewRole" class="form-select"><option value="">Выберите</option><optgroup label="SSC"><option value="SSC-2">SSC-2</option><option value="SSC-3">SSC-3</option><option value="SSC-4">SSC-4</option></optgroup><optgroup label="RSC"><option value="RSC-2">RSC-2</option><option value="RSC-3">RSC-3</option><option value="RSC-4">RSC-4</option></optgroup><optgroup label="MSC"><option value="MSC-2">MSC-2</option><option value="MSC-3">MSC-3</option></optgroup><optgroup label="TSC"><option value="TSC-2">TSC-2</option><option value="TSC-3">TSC-3</option><option value="TSC-4">TSC-4</option></optgroup><optgroup label="ERS"><option value="ERS-2">ERS-2</option><option value="ERS-3">ERS-3</option></optgroup></select></div></div>
+    <button class="admin-btn" id="promoRoleBtn"><span>ПОВЫСИТЬ</span></button></div>`;
+
+    // 7. Назначение Командира подразделения
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.commander}</div><div class="admin-card-title">Назначение Командира подразделения</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="commanderUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-field"><label>Подразделение</label><select id="commanderUnit" class="form-select"><option value="usf">USF</option><option value="dms">DMS</option><option value="fd">Feld Demons</option></select></div>
+    <button class="admin-btn" id="assignCommanderBtn"><span>НАЗНАЧИТЬ</span></button></div>`;
+
+    // 8. Выдача MSF-D-кода
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.msfcode}</div><div class="admin-card-title">Выдача MSF-D-кода</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="msfCodeUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-field"><label>Код</label><input type="text" id="msfCodeValue" placeholder="MSF-D-XXXXXX-X"></div>
+    <button class="admin-btn" id="assignMsfCodeBtn"><span>ВЫДАТЬ</span></button></div>`;
+
+    // 9. Отзыв роли корпуса
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.revoke}</div><div class="admin-card-title">Отзыв роли корпуса</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="revokeRoleUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-field"><label>Роль</label><select id="revokeRoleSelect" class="form-select"><option value="">Выберите</option></select></div>
+    <button class="admin-btn danger" id="revokeRoleBtn"><span>ОТОЗВАТЬ</span></button></div>`;
+
+    // 10. Снятие командира
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.removeCommander}</div><div class="admin-card-title">Снятие командира</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="revokeCommanderUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-field"><label>Подразделение</label><select id="revokeCommanderUnit" class="form-select"><option value="">Выберите</option></select></div>
+    <button class="admin-btn danger" id="revokeCommanderBtn"><span>СНЯТЬ</span></button></div>`;
+
+    // 11. Удаление бейджа
+    html += `
+    <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.removeBadge}</div><div class="admin-card-title">Удаление бейджа</div></div>
+    <div class="admin-field"><label>Пользователь</label><select id="removeBadgeUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+    <div class="admin-field"><label>Бейдж</label><select id="removeBadgeSelect" class="form-select"><option value="">Выберите</option></select></div>
+    <button class="admin-btn danger" id="removeBadgeBtn"><span>УДАЛИТЬ</span></button></div>`;
+
+    // 12. ТОЛЬКО ДЛЯ АДМИНА: назначение Оперативного директора
+    if (isAdmin) {
+      html += `
+      <div class="section-title">🔑 Только для Администратора</div>
+      <div class="admin-card"><div class="admin-card-header"><div class="admin-card-icon">${ICONS.commander}</div><div class="admin-card-title">Назначение Оперативного директора</div></div>
+      <div class="admin-field"><label>Пользователь</label><select id="odUser" class="form-select"><option value="">Выберите</option>${usersOptions}</select></div>
+      <div class="admin-row"><div class="admin-field"><label>Действие</label><select id="odAction" class="form-select"><option value="assign">Назначить</option><option value="revoke">Снять</option></select></div></div>
+      <button class="admin-btn" id="odBtn"><span>ПРИМЕНИТЬ</span></button>
+      <p style="font-size:0.5rem;color:var(--text-tertiary);margin-top:0.3rem;">Оперативный директор получает доступ к админ-панели</p></div>`;
+    }
+
+    html += `</div>`;
+    document.getElementById('adminContent').innerHTML = html;
+
+    setTimeout(() => { document.querySelectorAll('.admin-card').forEach((card, i) => { setTimeout(() => card.classList.add('visible'), i * 50); }); }, 150);
+
+    // Обработчики для color presets
+    document.querySelectorAll('.color-preset').forEach(p => p.addEventListener('click', () => { 
+      const wrap = p.closest('.color-picker-wrap'); 
+      if (wrap) { const inp = wrap.querySelector('input[type="color"]'); if (inp) inp.value = p.dataset.color; } 
+    }));
+
+    // === НАСТРОЙКА ОБРАБОТЧИКОВ ===
+    setupAdminHandlers(user.uid, isAdmin);
+  });
+})();
+
+function setupAdminHandlers(uid, isAdmin) {
+  // 1. Баллы
+  document.getElementById('pointsBtn').addEventListener('click', async () => {
+    const t = document.getElementById('pointsUser').value, a = parseInt(document.getElementById('pointsAmount').value), r = document.getElementById('pointsReason').value;
+    if (!t || !r) { showToast('Заполните все поля','error'); return; }
+    const ref = doc(db, 'users', t); const snap = await getDoc(ref); const d = snap.data();
+    const np = (d.points||0)+a, nk = Math.max(0,(d.karbogreyd||0)+a), nm = a<0?(d.minus||0)+Math.abs(a):(d.minus||0);
+    await updateDoc(ref, { points:np, karbogreyd:nk, minus:nm, history:arrayUnion({type:a>0?'plus':'minus',amount:Math.abs(a),reason:r,adminUid:uid,date:new Date().toISOString()}) });
+    showToast('Баллы обновлены','success');
+  });
+
+  // 2. Карбомарки
+  document.getElementById('carbomarksBtn').addEventListener('click', async () => {
+    const t = document.getElementById('carbomarksUser').value, a = parseInt(document.getElementById('carbomarksAmount').value), r = document.getElementById('carbomarksReason').value;
+    if (!t||!r) { showToast('Заполните все поля','error'); return; }
+    const snap = await getDoc(doc(db,'users',t));
+    await updateDoc(doc(db,'users',t), { carbomarks: (snap.data().carbomarks||0)+a });
+    showToast('Карбомарки выданы','success');
+  });
+
+  // 3. Роль корпуса
+  document.getElementById('assignRoleBtn').addEventListener('click', async () => {
+    const t = document.getElementById('roleUser').value, role = document.getElementById('roleSelect').value;
+    if (!t) { showToast('Выберите пользователя','error'); return; }
+    const ref = doc(db,'users',t); const snap = await getDoc(ref); const data = snap.data();
+    const roles = data.corpsRoles||[];
+    if (roles.find(r=>r.role===role)) { showToast('Роль уже назначена','error'); return; }
+    roles.push({role,points:0,pointsAtAssignment:data.points||0,assignedAt:new Date().toISOString(),assignedBy:uid});
+    await updateDoc(ref,{corpsRoles:roles});
+    showToast('Роль назначена','success');
+  });
+
+  // 4. Бейдж
+  document.getElementById('assignBadgeBtn').addEventListener('click', async () => {
+    const t = document.getElementById('badgeUser').value, label = document.getElementById('badgeLabel').value, color = document.getElementById('badgeColor').value, bg = document.getElementById('badgeBg').value;
+    if (!t||!label) { showToast('Заполните все поля','error'); return; }
+    const ref = doc(db,'users',t); const snap = await getDoc(ref);
+    const badges = snap.data().customBadges||[]; badges.push({label,color,bg,assignedAt:new Date().toISOString(),assignedBy:uid});
+    await updateDoc(ref,{customBadges:badges});
+    showToast('Бейдж выдан','success');
+  });
+
+  // 5. Перевод в подразделение (С ЗАМЕНОЙ, а не добавлением)
+  document.getElementById('transferBtn').addEventListener('click', async () => {
+    const t = document.getElementById('transferUser').value, unit = document.getElementById('transferUnit').value, role = document.getElementById('transferRole').value;
+    if (!t) { showToast('Выберите пользователя','error'); return; }
+    const ref = doc(db,'users',t);
+    // Полностью перезаписываем unitRoles, удаляя все старые подразделения
+    await updateDoc(ref, { unitRoles: { [unit]: role } });
+    showToast(`Переведён в ${UNIT_NAMES[unit] || unit.toUpperCase()} как ${ROLE_NAMES[role] || role} (старое удалено)`,'success');
+  });
+
+  // 6. Повышение роли
+  document.getElementById('promoUser').addEventListener('change', async () => {
+    const sel = document.getElementById('promoCurrentRole'); sel.innerHTML='<option value="">Выберите</option>';
+    const u = allUsers.find(u=>u.id===document.getElementById('promoUser').value);
+    if (u?.corpsRoles) u.corpsRoles.forEach(r=>sel.innerHTML+=`<option value="${r.role}">${r.role}</option>`);
+  });
+  document.getElementById('promoRoleBtn').addEventListener('click', async () => {
+    const t = document.getElementById('promoUser').value, cur = document.getElementById('promoCurrentRole').value, nw = document.getElementById('promoNewRole').value;
+    if (!t||!cur||!nw) { showToast('Заполните все поля','error'); return; }
+    const ref = doc(db,'users',t); const snap = await getDoc(ref); const roles = snap.data().corpsRoles||[];
+    const idx = roles.findIndex(r=>r.role===cur);
+    if (idx===-1) { showToast('Роль не найдена','error'); return; }
+    roles[idx].role=nw; roles[idx].promotedAt=new Date().toISOString(); roles[idx].promotedBy=uid; roles[idx].pointsAtAssignment=snap.data().points||0;
+    await updateDoc(ref,{corpsRoles:roles});
+    showToast('Роль повышена','success');
+  });
+
+  // 7. Назначение командира
+  document.getElementById('assignCommanderBtn').addEventListener('click', async () => {
+    const t = document.getElementById('commanderUser').value, unit = document.getElementById('commanderUnit').value;
+    if (!t) { showToast('Выберите пользователя','error'); return; }
+    const ref = doc(db,'users',t);
+    // Перезаписываем с новым подразделением (удаляем старые)
+    await updateDoc(ref, { unitRoles: { [unit]: 'commander' } });
+    showToast(`Командир назначен в ${UNIT_NAMES[unit] || unit.toUpperCase()}`,'success');
+  });
+
+  // 8. MSF-код
+  document.getElementById('assignMsfCodeBtn').addEventListener('click', async () => {
+    const t = document.getElementById('msfCodeUser').value, code = document.getElementById('msfCodeValue').value;
+    if (!t||!code) { showToast('Заполните все поля','error'); return; }
+    await updateDoc(doc(db,'users',t),{msfCode:code});
+    showToast('MSF-D-код выдан','success');
+  });
+
+  // 9. Отзыв роли
+  document.getElementById('revokeRoleUser').addEventListener('change', async () => {
+    const sel = document.getElementById('revokeRoleSelect'); sel.innerHTML='<option value="">Выберите</option>';
+    const u = allUsers.find(u=>u.id===document.getElementById('revokeRoleUser').value);
+    if (u?.corpsRoles) u.corpsRoles.forEach(r=>sel.innerHTML+=`<option value="${r.role}">${r.role}</option>`);
+  });
+  document.getElementById('revokeRoleBtn').addEventListener('click', async () => {
+    const t = document.getElementById('revokeRoleUser').value, role = document.getElementById('revokeRoleSelect').value;
+    if (!t||!role) { showToast('Заполните поля','error'); return; }
+    const ref = doc(db,'users',t); const snap = await getDoc(ref);
+    const roles = (snap.data().corpsRoles||[]).filter(r=>r.role!==role);
+    await updateDoc(ref,{corpsRoles:roles});
+    showToast('Роль отозвана','success');
+  });
+
+  // 10. Снятие командира
+  document.getElementById('revokeCommanderUser').addEventListener('change', async () => {
+    const sel = document.getElementById('revokeCommanderUnit'); sel.innerHTML='<option value="">Выберите</option>';
+    const u = allUsers.find(u=>u.id===document.getElementById('revokeCommanderUser').value);
+    if (u?.unitRoles) Object.entries(u.unitRoles).filter(([k,v])=>v==='commander').forEach(([k])=>sel.innerHTML+=`<option value="${k}">${UNIT_NAMES[k]||k.toUpperCase()}</option>`);
+  });
+  document.getElementById('revokeCommanderBtn').addEventListener('click', async () => {
+    const t = document.getElementById('revokeCommanderUser').value, unit = document.getElementById('revokeCommanderUnit').value;
+    if (!t||!unit) { showToast('Заполните поля','error'); return; }
+    const ref = doc(db,'users',t); const snap = await getDoc(ref); const ur = snap.data().unitRoles||{}; delete ur[unit];
+    await updateDoc(ref,{unitRoles:ur});
+    showToast('Командир снят','success');
+  });
+
+  // 11. Удаление бейджа
+  document.getElementById('removeBadgeUser').addEventListener('change', async () => {
+    const sel = document.getElementById('removeBadgeSelect'); sel.innerHTML='<option value="">Выберите</option>';
+    const u = allUsers.find(u=>u.id===document.getElementById('removeBadgeUser').value);
+    if (u?.customBadges) u.customBadges.forEach((b,i)=>sel.innerHTML+=`<option value="${i}">${b.label}</option>`);
+  });
+  document.getElementById('removeBadgeBtn').addEventListener('click', async () => {
+    const t = document.getElementById('removeBadgeUser').value, idx = parseInt(document.getElementById('removeBadgeSelect').value);
+    if (!t||isNaN(idx)) { showToast('Заполните поля','error'); return; }
+    const ref = doc(db,'users',t); const snap = await getDoc(ref);
+    const badges = (snap.data().customBadges||[]).filter((_,i)=>i!==idx);
+    await updateDoc(ref,{customBadges:badges});
+    showToast('Бейдж удалён','success');
+  });
+
+  // 12. ТОЛЬКО ДЛЯ АДМИНА: Оперативный директор
+  if (isAdmin) {
+    document.getElementById('odBtn').addEventListener('click', async () => {
+      const t = document.getElementById('odUser').value, action = document.getElementById('odAction').value;
+      if (!t) { showToast('Выберите пользователя','error'); return; }
+      const ref = doc(db,'users',t); const snap = await getDoc(ref); const ur = snap.data().unitRoles||{};
+      if (action === 'assign') {
+        // Назначаем ОД (удаляем старые подразделения)
+        await updateDoc(ref, { unitRoles: { od: 'director' } });
+        showToast('Оперативный директор назначен','success');
+      } else {
+        delete ur.od;
+        await updateDoc(ref, { unitRoles: ur });
+        showToast('Оперативный директор снят','success');
+      }
+    });
+  }
+}
+
+function showToast(msg, type) { 
+  const t = document.createElement('div'); 
+  t.className='toast toast-'+type; 
+  t.textContent=msg; 
+  document.body.appendChild(t); 
+  requestAnimationFrame(()=>t.classList.add('show')); 
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},3000); 
+}
+</script>
+
+</body>
+</html>

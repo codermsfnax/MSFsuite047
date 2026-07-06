@@ -1,0 +1,15 @@
+{
+  "firebase": {
+    "apiKey": "AIzaSyA6N0ioPT-WGWyHf3sALG_y05XlLFOtae0",
+    "authDomain": "msfsuite.firebaseapp.com",
+    "projectId": "msfsuite",
+    "storageBucket": "msfsuite.firebasestorage.app",
+    "messagingSenderId": "272660677027",
+    "appId": "1:272660677027:web:a89d750c6f5a64a7ca1a16"
+  },
+  "gamma": "GAMMAC-917230485619827364012398172034-TACOPS",
+  "beta": "BETACX-042918637561290837465120934576-CMDOPS",
+  "alpha": "ALPHAC-781296540128399317460325120458-GENCOM",
+  "webhook": "https://discord.com/api/webhooks/1372820167075041330/VIn6cK4PQ0WAN3ADJJ8VdGhKDp_xfEpJgREEbTVgwQcxZ7laxc-mwIy6R9sUWsuLILye",
+  "adminEmail": "netprav61@gmail.com"
+}

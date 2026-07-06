@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — MSF-043</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="assets/images/msf.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .error-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+      padding: 2rem;
+      z-index: 1;
+      position: relative;
+    }
+    .error-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(4rem, 15vw, 10rem);
+      font-weight: 800;
+      color: var(--accent);
+      text-shadow: 0 0 60px var(--accent-glow);
+      animation: errorPulse 2s ease-in-out infinite;
+      line-height: 1;
+    }
+    @keyframes errorPulse {
+      0%, 100% { text-shadow: 0 0 40px var(--accent-glow); }
+      50% { text-shadow: 0 0 80px var(--accent-glow), 0 0 120px var(--accent-glow); }
+    }
+    .error-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin: 1.5rem 0;
+      letter-spacing: 0.1em;
+    }
+    .error-sub {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+      margin-bottom: 2rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .error-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.8rem 2rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .error-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 30px var(--accent-glow);
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="header-logo">MSF-043</a>
+  </div>
+</header>
+
+<div class="error-container">
+  <div class="error-code">404</div>
+  <p class="error-text">PAGE_NOT_FOUND</p>
+  <p class="error-sub">Запрашиваемая страница не существует или была удалена</p>
+  <a href="index.html" class="error-btn">Вернуться на главную</a>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

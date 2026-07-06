@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Карботерия — MSF-043</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" href="../assets/images/msf.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo">MSF-043</a>
+    <nav>
+      <ul class="header-nav">
+        <li><a href="../index.html">Главная</a></li>
+        <li><a href="reglament.html">Регламент</a></li>
+        <li><a href="karbogreyd.html">Карбогрейд</a></li>
+        <li><a href="struktura.html">Структура</a></li>
+        <li><a href="korpusa.html">Корпуса</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="main-container">
+  <aside class="sidebar">
+    <div class="sidebar-block">
+      <p class="sidebar-title">Разделы</p>
+      <ul class="sidebar-list">
+        <li><a href="#general">Общие положения</a></li>
+        <li><a href="#signals">Сигналы</a></li>
+        <li><a href="#commands">Команды</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-block">
+      <p class="sidebar-title">Документы</p>
+      <ul class="sidebar-list">
+        <li><a href="reglament.html">Регламент</a></li>
+        <li><a href="karbogreyd.html">Карбогрейд</a></li>
+        <li><a href="karboteriya.html">Карботерия</a></li>
+        <li><a href="karboekniz.html">Карбоэкниз</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="content-header reveal">
+      <p class="content-label">Система коммуникации</p>
+      <h1 class="content-title">Карботерия</h1>
+      <p class="content-subtitle">Система сигналов, команд и правил коммуникации. Утверждена 3 июля 2026 г.</p>
+    </div>
+
+    <div class="toc reveal">
+      <p class="toc-title">Содержание</p>
+      <ol>
+        <li><a href="#general">Общие положения</a></li>
+        <li><a href="#signals">Сигналы</a></li>
+        <li><a href="#commands">Команды</a></li>
+      </ol>
+    </div>
+
+    <h2 id="general">1. Общие положения</h2>
+    <h3>1.1–1.3. Назначение</h3>
+    <p><strong>Карботерия</strong> — официальная система сигналов, команд и правил коммуникации. Цели: координация действий, сокращение времени передачи информации, минимизация ошибок, повышение эффективности управления.</p>
+
+    <h3>1.4. Термины</h3>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Термин</th><th>Определение</th></tr></thead>
+        <tbody>
+          <tr><td>Команда</td><td>Распоряжение с прямым приказом, обязательное для немедленного исполнения.</td></tr>
+          <tr><td>Сигнал</td><td>Краткое уведомление о состоянии или действии, требующее учёта или реакции.</td></tr>
+          <tr><td>Код</td><td>Сокращённое обозначение для быстрой передачи информации.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>1.5–1.8. Обязанности и правила</h3>
+    <p>Все оперативники обязаны знать сигналы и команды. Приоритет в эфире: команды командира → «Контакт» и «Граната» → «200» и «400». Обращение к вышестоящему — только по позывному или «Командир», на «ты» запрещено без разрешения. За нарушения — ответственность по Карбогрейду.</p>
+
+    <h2 id="signals">2. Сигналы</h2>
+    <h3>2.1. Состояние состава</h3>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Сигнал</th><th>Значение</th></tr></thead>
+        <tbody>
+          <tr><td><strong>100</strong></td><td>Боеспособен, в полном порядке.</td></tr>
+          <tr><td><strong>200</strong></td><td>Убит (выбит).</td></tr>
+          <tr><td><strong>300</strong></td><td>Ранен, сохраняет боеспособность (лёгкий/средний/тяжёлый).</td></tr>
+          <tr><td><strong>400</strong></td><td>Тяжело ранен, небоеспособен.</td></tr>
+          <tr><td><strong>500</strong></td><td>Отставший, потерял контакт с группой.</td></tr>
+          <tr><td><strong>600</strong></td><td>В западне, заблокирован.</td></tr>
+          <tr><td><strong>700</strong></td><td>Потерял ориентирование.</td></tr>
+          <tr><td><strong>Турист</strong></td><td>Обнаружена нейтральная ЧВК/группа.</td></tr>
+          <tr><td><strong>Регуляр</strong></td><td>Организованный противник.</td></tr>
+          <tr><td><strong>Дикий</strong></td><td>Неорганизованный противник.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2.2. Состояние боезапаса</h3>
+    <p><strong>Полный</strong> — боекомплект укомплектован. <strong>Половина</strong> — ~2–3 магазина. <strong>Последний</strong> — один магазин. <strong>Пустой</strong> — патроны закончились. <strong>Перезаряд</strong> — смена магазина. <strong>Дозаряд</strong> — набивка магазинов. <strong>БК [калибр]</strong> — запрос патронов. <strong>Кенос</strong> — закончились медицинские средства.</p>
+
+    <h3>2.3. Состояние техники</h3>
+    <p><strong>Техника 100</strong> — исправна. <strong>Техника 200</strong> — уничтожена. <strong>Техника 300</strong> — повреждена, подвижна. <strong>Техника 400</strong> — обездвижена.</p>
+
+    <h3>2.4. Ситуационная готовность</h3>
+    <p><strong>Зелёный</strong> — угроз нет. <strong>Жёлтый</strong> — косвенные признаки. <strong>Красный</strong> — угроза подтверждена. <strong>Контакт [направление]</strong> — визуальный контакт.</p>
+
+    <h3>2.5. Тактические манёвры</h3>
+    <p><strong>Держу</strong> — сектор под контролем. <strong>Сдвигаюсь</strong> — начинаю движение. <strong>На прицеле</strong> — цель в прицеле, огонь не открыт. <strong>Занял</strong> — позиция занята. <strong>Чисто</strong> — зона проверена. <strong>Прижат</strong> — под плотным огнём.</p>
+
+    <h3>2.6–2.9. Поражение, связь, гранаты, спецвооружение</h3>
+    <p><strong>Минус</strong> — противник уничтожен. <strong>Снят</strong> — цель ликвидирована точным выстрелом. <strong>Сорок три, свои</strong> — опознавание. <strong>Граната</strong> — экстренное укрытие. <strong>Зарядка</strong> — осколочная граната. <strong>Дым</strong> — дымовая. <strong>Свет</strong> — светошумовая. <strong>Газ</strong> — газовая. <strong>Воздух</strong> — угроза с воздуха.</p>
+
+    <h2 id="commands">3. Команды</h2>
+    <h3>3.1. Базовые</h3>
+    <div class="table-wrap reveal">
+      <table>
+        <thead><tr><th>Команда</th><th>Действие</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Вперёд</strong></td><td>Движение в указанном направлении.</td></tr>
+          <tr><td><strong>Стоять</strong></td><td>Немедленная остановка.</td></tr>
+          <tr><td><strong>Отход</strong></td><td>Организованное отступление.</td></tr>
+          <tr><td><strong>Отход-Отход-Отход</strong></td><td>Экстренный отход.</td></tr>
+          <tr><td><strong>Тихо</strong></td><td>Полная тишина.</td></tr>
+          <tr><td><strong>Группа — связь</strong></td><td>Проверка готовности.</td></tr>
+          <tr><td><strong>Отставить</strong></td><td>Прекратить действие.</td></tr>
+          <tr><td><strong>Загружаемся</strong></td><td>Пополнение снаряжения.</td></tr>
+          <tr><td><strong>Погружаемся</strong></td><td>Погрузка в технику.</td></tr>
+          <tr><td><strong>Выгружаемся</strong></td><td>Выгрузка из техники.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>3.2–3.5. Огневые, манёвра, прикрытия, штурмовые</h3>
+    <p><strong>Огонь</strong> — открыть огонь. <strong>Отставить огонь</strong> — прекратить. <strong>На подавление</strong> — плотный огонь по сектору. <strong>По готовности</strong> — открывать без общей команды. <strong>Смещение</strong> — смена позиции. <strong>В обход</strong> — фланговый обход. <strong>Штурм</strong> — решительная атака. <strong>Прикрывай</strong> — запрос огневой поддержки. <strong>Покрывай</strong> — прикрыть конкретного бойца. <strong>Сбей</strong> — отвлечь внимание. <strong>В чистку</strong> — полная зачистка территории.</p>
+  </main>
+</div>
+
+<script type="module" src="../js/script.js"></script>
+</body>
+</html>
